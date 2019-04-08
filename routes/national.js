@@ -17,35 +17,45 @@ router.get("/:year/", async (req, res, next) => {
     AGES: update.ages(req.query.ages)
   };
 
-  if(['regions', 'countries'].some(q => !Object.keys(req.query).includes(q))){
+  if (['regions', 'countries'].some(q => !Object.keys(req.query).includes(q))) {
     const tops = await getNationalInfo(req);
     params['REGIONS'] = Object.keys(req.query).includes('regions') ? req.query.regions.split(',') : tops['topRegions'];
-    params['COUNTRIES'] = Object.keys(req.query).includes('countries') ? req.query.countries.split(','): tops['topCountries'];
+    params['COUNTRIES'] = Object.keys(req.query).includes('countries') ? req.query.countries.split(',') : tops['topCountries'];
+  }
+  else {
+    params['REGIONS'] = req.query.regions.split(',');
+    params['COUNTRIES'] = req.query.countries.split(',');
   }
 
+  // Monthly evolution
+  const monthly = await National.getMonths(dbUtils.getSession(req), params);
+  
   // Year
-  Info.getTotNationalByYear(dbUtils.getSession(req), params)
+  National.getTotalByYear(dbUtils.getSession(req), params)
     .then(totReviews => {
       return National.getRegionsValuesByYear(dbUtils.getSession(req), params, totReviews)
     })
     .then(yearArray => {
       // Year - 1
-      Info.getTotNationalByYear(dbUtils.getSession(req), { YEAR: params.YEAR - 1 })
+      National.getTotalByYear(dbUtils.getSession(req), { YEAR: params.YEAR - 1 })
         .then(totReviewsOld => {
           params.YEAR -= 1;
           return National.getRegionsValuesByYear(dbUtils.getSession(req), params, totReviewsOld, yearArray)
         })
         .then(finalArray => {
-          writeResponse(res, diff(finalArray));
+          writeResponse(res, {
+            'Evolution': diff(finalArray),
+            'Monthly': monthly
+          })
         })
-    })
+    });
 });
 
 const diff = (array) => {
-  for(var region in array){
-    for(var year in array[region]){
+  for (var region in array) {
+    for (var year in array[region]) {
       array[region]['diff'] = {
-        'Ingoing':  array[region][eval(year) + 1]['Ingoing'] - array[region][year]['Ingoing'],
+        'Ingoing': array[region][eval(year) + 1]['Ingoing'] - array[region][year]['Ingoing'],
         'Outgoing': array[region][eval(year) + 1]['Outgoing'] - array[region][year]['Outgoing']
       }
       break;

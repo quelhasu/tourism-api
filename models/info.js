@@ -58,13 +58,26 @@ exports.getAgeRanges = (session) => {
     })
 }
 
-exports.getTotNationalByYear = (session, params) => {
+exports.getMonthsByRegions = (session, params, q, going, array = null) => {
+  cmvalues = array || {};
+  return session
+    .run(q.replace(/{AGES}/g, params.AGES), params)
+    .then(result => {
+      result.records.forEach(record => {
+        region = record.get("region");
+        month = record.get("month");
+        !(region in cmvalues) && (cmvalues[region] = {});
+        !(going in cmvalues[region]) && (cmvalues[region][going] = { "months": [] })
+        cmvalues[region][going].months[month - 1] = record.get("NB");
+      });
+      return cmvalues;
+    });
+}
+
+exports.getTotByYear = (session, params, q) => {
   nbTot = {}
   return session
-    .run('MATCH (a0:Area{country:"France"}) -[a1:trip{year:{YEAR}}]- \
-    (a2:Area{name:"Aquitaine"}) \
-    RETURN sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1, \
-    sum(case when ((a0) <-[a1]- (a2) ) then a1.nb else 0 end) as NB2', params)
+    .run(q, params)
     .then(result => {
       result.records.forEach(record => {
         nbTot['NB1'] = record.get("NB1").low;
