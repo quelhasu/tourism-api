@@ -2,7 +2,6 @@ const update = require("../helpers/update");
 
 exports.getRegionsValuesByYear = (session, params, totReviews, prevArray = null) => {
   var regionsYear = prevArray || {};
-  console.log(regionsYear);
   return session 
     .run('MATCH (a0:Area{country:"France"})  -[a1:trip{year:{YEAR}}]- \
     (a2:Area{name:"Aquitaine"}) \

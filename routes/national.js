@@ -10,14 +10,18 @@ router.get("/", (req, res, next) => {
   res.send("hey");
 });
 
-router.get("/:year/", (req, res, next) => {
+router.get("/:year/", async (req, res, next) => {
   params = {
     YEAR: Number(req.params.year),
     TOP: Number(req.query.limit) || 20,
-    REGIONS: req.query.regions.split(','),
-    COUNTRIES: req.query.countries.split(','),
     AGES: update.ages(req.query.ages)
   };
+
+  if(['regions', 'countries'].some(q => !Object.keys(req.query).includes(q))){
+    const tops = await getNationalInfo(req);
+    params['REGIONS'] = Object.keys(req.query).includes('regions') ? req.query.regions.split(',') : tops['topRegions'];
+    params['COUNTRIES'] = Object.keys(req.query).includes('countries') ? req.query.countries.split(','): tops['topCountries'];
+  }
 
   // Year
   Info.getTotNationalByYear(dbUtils.getSession(req), params)
