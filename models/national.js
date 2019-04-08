@@ -18,8 +18,7 @@ exports.getRegionsValuesByYear = (session, params, totReviews, prevArray = null)
         !(region in regionsYear) && (regionsYear[region] = {});
         !(params.YEAR in regionsYear[region]) && (regionsYear[region][params.YEAR] = {});
         regionsYear[region][params.YEAR]["Ingoing"] = Math.round((10000 * record.get("NB1")) / totReviews["NB1"]) / 100;
-        regionsYear[region][params.YEAR]["Outgoing"] =
-          Math.round((10000 * record.get("NB2")) / totReviews["NB1"]) / 100;
+        regionsYear[region][params.YEAR]["Outgoing"] = Math.round((10000 * record.get("NB2")) / totReviews["NB1"]) / 100;
       });
       session.close();
       return regionsYear;
@@ -30,16 +29,19 @@ exports.getRegionsValuesByYear = (session, params, totReviews, prevArray = null)
     });
 };
 
+
+
 exports.getTotalByYear = (session, params) => {
   return Info.getTotByYear(session, params,
     'MATCH (a0:Area{country:"France"}) -[a1:trip{year:{YEAR}}]- \
     (a2:Area{name:"Aquitaine"}) \
     RETURN sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1, \
-    sum(case when ((a0) <-[a1]- (a2) ) then a1.nb else 0 end) as NB2');
+    sum(case when ((a0) <-[a1]- (a2) ) then a1.nb else 0 end) as NB2',
+    [1,2]);
 }
 
 exports.getMonths = (session, params) => {
-  return Info.getMonthsByRegions(
+  return Info.getMonthsValues(
     session,
     params,
     'MATCH (a0:Area{country:"France"})  -[a1:trip{year:{YEAR}}]-> \
@@ -47,9 +49,9 @@ exports.getMonths = (session, params) => {
     and a1.nat in {COUNTRIES} {AGES} \
     RETURN a0.name as region, a1.month as month, sum(a1.nb) as NB \
     order by NB desc',
-    'Ingoing')
+    'Ingoing', 'region')
     .then(result => {
-      return Info.getMonthsByRegions(
+      return Info.getMonthsValues(
         session, 
         params, 
         'MATCH (a0:Area{country:"France"})  <-[a1:trip{year:{YEAR}}]- \
@@ -57,7 +59,7 @@ exports.getMonths = (session, params) => {
         and a1.nat in {COUNTRIES} {AGES} \
         RETURN a0.name as region, a1.month as month, sum(a1.nb) as NB \
         order by NB desc', 
-        'Outgoing',
+        'Outgoing','region',
         result);
     })
     .then(final => {

@@ -4,10 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var statsRouter = require('./routes/stats');
-var nationalRouter = require('./routes/national');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const statsRouter = require('./routes/stats');
+const nationalRouter = require('./routes/national');
+const internationalRouter = require('./routes/international');
 
 var app = express();
 
@@ -21,7 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-statsRouter,nationalRouter.get('/', (req, res, next) => {
+statsRouter,internationalRouter,nationalRouter.get('/', (req, res, next) => {
   res.send(req.params);
 })
 
@@ -29,6 +30,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/:city/stats', statsRouter);
 app.use('/:city/national', nationalRouter);
+app.use('/:city/international', internationalRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

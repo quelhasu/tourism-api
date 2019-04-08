@@ -58,30 +58,32 @@ exports.getAgeRanges = (session) => {
     })
 }
 
-exports.getMonthsByRegions = (session, params, q, going, array = null) => {
+exports.getMonthsValues = (session, params, q, going, aim, array = null) => {
   cmvalues = array || {};
   return session
     .run(q.replace(/{AGES}/g, params.AGES), params)
     .then(result => {
       result.records.forEach(record => {
-        region = record.get("region");
+        recordVar = record.get(aim);
         month = record.get("month");
-        !(region in cmvalues) && (cmvalues[region] = {});
-        !(going in cmvalues[region]) && (cmvalues[region][going] = { "months": [] })
-        cmvalues[region][going].months[month - 1] = record.get("NB");
+        !(recordVar in cmvalues) && (cmvalues[recordVar] = {});
+        !(going in cmvalues[recordVar]) && (cmvalues[recordVar][going] = { "months": [] })
+        cmvalues[recordVar][going].months[month - 1] = record.get("NB");
       });
+
       return cmvalues;
     });
 }
 
-exports.getTotByYear = (session, params, q) => {
+exports.getTotByYear = (session, params, q, nbArgs) => {
   nbTot = {}
   return session
     .run(q, params)
     .then(result => {
       result.records.forEach(record => {
-        nbTot['NB1'] = record.get("NB1").low;
-        nbTot['NB2'] = record.get("NB2").low;
+        nbArgs.forEach(i => {
+          nbTot['NB'+i] = record.get("NB"+i).low;
+        })
       })
       nbTot['Year'] = params.YEAR;
       session.close();

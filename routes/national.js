@@ -11,21 +11,16 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/:year/", async (req, res, next) => {
+  var tops = null;
   params = {
     YEAR: Number(req.params.year),
-    TOP: Number(req.query.limit) || 20,
+    TOP: Number(req.query.limit) || 10,
     AGES: update.ages(req.query.ages)
   };
 
-  if (['regions', 'countries'].some(q => !Object.keys(req.query).includes(q))) {
-    const tops = await getNationalInfo(req);
-    params['REGIONS'] = Object.keys(req.query).includes('regions') ? req.query.regions.split(',') : tops['topRegions'];
-    params['COUNTRIES'] = Object.keys(req.query).includes('countries') ? req.query.countries.split(',') : tops['topCountries'];
-  }
-  else {
-    params['REGIONS'] = req.query.regions.split(',');
-    params['COUNTRIES'] = req.query.countries.split(',');
-  }
+  if (['regions', 'countries'].some(q => !Object.keys(req.query).includes(q))) tops = await getNationalInfo(req);
+  params['REGIONS'] = Object.keys(req.query).includes('regions') ? req.query.regions.split(',') : tops['topRegions'];
+  params['COUNTRIES'] = Object.keys(req.query).includes('countries') ? req.query.countries.split(',') : tops['topCountries'];
 
   // Monthly evolution
   const monthly = await National.getMonths(dbUtils.getSession(req), params);
@@ -51,18 +46,6 @@ router.get("/:year/", async (req, res, next) => {
     });
 });
 
-const diff = (array) => {
-  for (var region in array) {
-    for (var year in array[region]) {
-      array[region]['diff'] = {
-        'Ingoing': array[region][eval(year) + 1]['Ingoing'] - array[region][year]['Ingoing'],
-        'Outgoing': array[region][eval(year) + 1]['Outgoing'] - array[region][year]['Outgoing']
-      }
-      break;
-    }
-  }
-  return array;
-}
 
 router.get("/:year/info", (req, res, next) => {
   params = {
@@ -79,18 +62,30 @@ const getNationalInfo = (req) => {
       Info.getTopCountries(dbUtils.getSession(req), params),
       Info.getAgeRanges(dbUtils.getSession(req)),
     ])
-      .then(([topRegions, topCountries, topAges]) => {
-        resolve({
-          "topRegions": topRegions,
-          "topCountries": topCountries,
-          "topAges": topAges,
-        })
+    .then(([topRegions, topCountries, topAges]) => {
+      resolve({
+        "topRegions": topRegions,
+        "topCountries": topCountries,
+        "topAges": topAges,
       })
-      .catch(err => {
-        console.log(err);
-      })
+    })
+    .catch(err => {
+      console.log(err);
+    })
   })
 }
 
+const diff = (array) => {
+  for (var region in array) {
+    for (var year in array[region]) {
+      array[region]['diff'] = {
+        'Ingoing': array[region][eval(year) + 1]['Ingoing'] - array[region][year]['Ingoing'],
+        'Outgoing': array[region][eval(year) + 1]['Outgoing'] - array[region][year]['Outgoing']
+      }
+      break;
+    }
+  }
+  return array;
+}
 
 module.exports = router;
