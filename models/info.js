@@ -19,6 +19,26 @@ exports.getTopRegions = (session, params) => {
     })
 }
 
+exports.getTopAreas = (session, params) => {
+  var topRegions = [];
+  return session
+    .run('MATCH (a0:AreaGironde)-[a1:trip{year:{YEAR}}]->(a2:AreaGironde) \
+    WHERE a0.name_1 = {REGION} AND a2.name_1 = {REGION}\
+    RETURN a0.name_3 as shape, sum(a1.nb) as NB \
+    order by NB desc LIMIT {TOP}', params)
+    .then(result => {
+      result.records.forEach(record => {
+        topRegions.push(record.get('shape'));
+      });
+      session.close();
+      return topRegions;
+    })
+    .catch(error => {
+      console.log("Erreur : " + error);
+      return null;
+    })
+}
+
 exports.getTopCountries = (session, params) => {
   var topCountries = [];
   return session 
