@@ -3,6 +3,7 @@ var router = express.Router({ mergeParams: true });
 var writeResponse = require('../helpers/response').writeResponse
 var dbUtils = require('../neo4j/dbUtils');
 var Stats = require("../models/stats");
+const update = require("../helpers/update");
 
 router.get("/", (req, res, next) => {
   Stats.getDatabaseStats(dbUtils.getSession(req))
@@ -35,9 +36,5 @@ router.get("/:country/:dep", (req, res, next) => {
   })
     .catch(next);
 });
-
-String.prototype.capitalize = function () {
-  return this.charAt(0).toUpperCase() + this.slice(1);
-};
 
 module.exports = router;

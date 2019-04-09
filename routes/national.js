@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router({ mergeParams: true });
 var writeResponse = require('../helpers/response').writeResponse
-var update = require('../helpers/update');
+const Updater = require('../helpers/update');
 var dbUtils = require('../neo4j/dbUtils');
 var Info = require("../models/info");
 var National = require("../models/national");
@@ -15,7 +15,7 @@ router.get("/:year/", async (req, res, next) => {
   params = {
     YEAR: Number(req.params.year),
     TOP: Number(req.query.limit) || 10,
-    AGES: update.ages(req.query.ages)
+    AGES: Updater.ages(req.query.ages)
   };
 
   if (['regions', 'countries'].some(q => !Object.keys(req.query).includes(q))) tops = await getNationalInfo(req);
@@ -39,7 +39,7 @@ router.get("/:year/", async (req, res, next) => {
         })
         .then(finalArray => {
           writeResponse(res, {
-            'Evolution': diff(finalArray),
+            'Evolution': Updater.diffGoing(finalArray),
             'Monthly': monthly
           })
         })
@@ -73,19 +73,6 @@ const getNationalInfo = (req) => {
       console.log(err);
     })
   })
-}
-
-const diff = (array) => {
-  for (var region in array) {
-    for (var year in array[region]) {
-      array[region]['diff'] = {
-        'Ingoing': array[region][eval(year) + 1]['Ingoing'] - array[region][year]['Ingoing'],
-        'Outgoing': array[region][eval(year) + 1]['Outgoing'] - array[region][year]['Outgoing']
-      }
-      break;
-    }
-  }
-  return array;
 }
 
 module.exports = router;
