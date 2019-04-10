@@ -30,6 +30,7 @@ nconf.env(['PORT', 'NODE_ENV'])
     'PASSWORD' : process.env.DATABASE_PASSWORD,
     'neo4j': 'local',
     'neo4j-local': 'bolt://localhost',
+    'neo4j-docker': 'bolt://neo4j',
     'base_url': 'http://localhost:3000',
     'api_path': '/api/v0'
   });
