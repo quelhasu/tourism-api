@@ -1,6 +1,5 @@
-<main class="markdown-body">
-
 <img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/81/airplane_2708.png" align=right height=80>
+
 # Tourism API
 > REST API to query Neo4J Tourism Database
 
