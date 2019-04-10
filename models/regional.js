@@ -3,7 +3,7 @@ const Info = require('./info');
 exports.getTotalByYear = (session, params) => {
   return Info.getTotByYear(session, params,
     'MATCH (a0:AreaGironde)-[a1:trip{year:{YEAR}}]-(a2:AreaGironde) \
-    WHERE a0.name_1 = {REGION} AND a2.name_1 = {REGION} \
+    WHERE a0.{NAME} = {REGION} AND a2.{NAME} = {REGION} \
     RETURN sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1, \
     sum(case when ((a0) <-[a1]- (a2) ) then a1.nb else 0 end) as NB2',
     [1, 2]);

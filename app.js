@@ -5,13 +5,14 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 const statsRouter = require('./routes/stats');
 const nationalRouter = require('./routes/national');
 const internationalRouter = require('./routes/international');
 const regionalRouter = require('./routes/regional');
 
 var app = express();
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,7 +29,6 @@ statsRouter,internationalRouter,nationalRouter,regionalRouter.get('/', (req, res
 })
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/:city/stats', statsRouter);
 app.use('/:city/national', nationalRouter);
 app.use('/:city/international', internationalRouter);

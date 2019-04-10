@@ -36,7 +36,7 @@ exports.getDatabaseCountryStats = (session, params, vYears) => {
     })
     .catch(error => {
       console.log("Erreur : " + error);
-      return null;
+      throw {username: 'This field is required.', status: 400};
     })
 }
 

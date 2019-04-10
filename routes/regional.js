@@ -6,13 +6,15 @@ var dbUtils = require('../neo4j/dbUtils');
 var Info = require("../models/info");
 var Regional = require("../models/regional");
 
+
 router.get("/", (req, res, next) => {
   res.send("hey");
 });
 
-router.get("/:year/:region", async (req, res, next) => {
+router.get("/:year/:name/:region", async (req, res, next) => {
   params = {
     REGION: req.params.region.capitalize(),
+    NAME: req.params.name.nameQuery(),
     YEAR: Number(req.params.year),
     TOP: Number(req.query.limit) || 10,
     AGES: Updater.ages(req.query.ages)
@@ -43,9 +45,10 @@ router.get("/:year/:region", async (req, res, next) => {
 
 
 
-router.get("/:year/:region/info", (req, res, next) => {
+router.get("/:year/:name/:region/info", (req, res, next) => {
   params = {
     REGION: req.params.region.capitalize(),
+    NAME: req.params.name.nameQuery(),
     YEAR: Number(req.params.year),
     TOP: Number(req.query.limit) || 20
   };
@@ -53,6 +56,7 @@ router.get("/:year/:region/info", (req, res, next) => {
 });
 
 const getRegionalInfo = (req) => {
+  console.log(params);
   return new Promise((resolve, reject) => {
     Promise.all([
       Info.getTopCountries(dbUtils.getSession(req), params),

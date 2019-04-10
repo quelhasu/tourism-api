@@ -24,10 +24,25 @@ exports.diffGoing = (array) => {
   return array;
 };
 
+exports.diff = (array) => {
+  for (var country in array) {
+    for (var year in array[country]) {
+      array[country]['diff'] = array[country][eval(year) + 1] - array[country][year];
+      break;
+    }
+  }
+  return array;
+}
+
 Number.prototype.roundDecimal = function (nbDec) {
+  // +(val) => string converted to a Number
   return +(Math.round(this + "e+" + nbDec)  + "e-" + nbDec);
 };
 
 String.prototype.capitalize = function () {
   return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
+String.prototype.nameQuery = function () {
+  return "name_"+this;
 };

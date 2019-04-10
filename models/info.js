@@ -20,12 +20,13 @@ exports.getTopRegions = (session, params) => {
 }
 
 exports.getTopAreas = (session, params) => {
+  console.log(params);
   var topRegions = [];
   return session
-    .run('MATCH (a0:AreaGironde)-[a1:trip{year:{YEAR}}]->(a2:AreaGironde) \
-    WHERE a0.name_1 = {REGION} AND a2.name_1 = {REGION}\
+    .run(`MATCH (a0:AreaGironde)-[a1:trip{year:{YEAR}}]->(a2:AreaGironde) \
+    WHERE a0.${params.NAME} = {REGION} AND a2.${params.NAME} = {REGION}\
     RETURN a0.name_3 as shape, sum(a1.nb) as NB \
-    order by NB desc LIMIT {TOP}', params)
+    order by NB desc LIMIT {TOP}`, params)
     .then(result => {
       result.records.forEach(record => {
         topRegions.push(record.get('shape'));
