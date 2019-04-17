@@ -19,18 +19,18 @@ router.get("/:year/", async (req, res, next) => {
 
   const tops = await getInternationalInfo(req);
   params['COUNTRIES'] = Object.keys(req.query).includes('countries') ? req.query.countries.split(',') : tops['topCountries'];
-  params['TYPER'] = Object.keys(req.query).includes('typer') ? req.query.typer.split(',') : ['R','A','H'];
+  params['TYPER'] = Object.keys(req.query).includes('typer') ? req.query.typer.split(',') : ['R', 'A', 'H'];
 
   // Monthly evolution
   const monthly = await International.getMonths(dbUtils.getSession(req), params);
-  
+
   // YEAR
   const totReviews = await International.getTotalByYear(dbUtils.getSession(req), params);
   International.getCountriesValuesByYear(dbUtils.getSession(req), params, totReviews).then(async values => {
     // YEAR - 1
     params['YEAR'] = params.YEAR - 1;
     const oldTotReviews = await International.getTotalByYear(dbUtils.getSession(req), params);
-    International.getCountriesValuesByYear(dbUtils.getSession(req), params, oldTotReviews, values).then(finalArray=>{
+    International.getCountriesValuesByYear(dbUtils.getSession(req), params, oldTotReviews, values).then(finalArray => {
       writeResponse(res, {
         "Evolution": diff(finalArray),
         "Monthly": monthly
@@ -69,7 +69,10 @@ const getInternationalInfo = (req) => {
 const diff = (array) => {
   for (var country in array) {
     for (var year in array[country]) {
-      array[country]['diff'] = array[country][eval(year) + 1] - array[country][year];
+      array[country]['diff'] =
+        {
+          'value': Number(array[country][eval(year) + 1]['value'] - array[country][year]['value']).roundDecimal(2)
+        }
       break;
     }
   }

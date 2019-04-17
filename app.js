@@ -28,6 +28,16 @@ statsRouter,internationalRouter,nationalRouter,regionalRouter.get('/', (req, res
   res.send(req.params);
 })
 
+// CORS, whom are allow to use the API
+app.use(function(req, res, next) {
+  res.setHeader("Content-Type", "application/json");
+  res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  next();
+});
+
 app.use('/', indexRouter);
 app.use('/:city/stats', statsRouter);
 app.use('/:city/national', nationalRouter);

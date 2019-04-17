@@ -22,7 +22,8 @@ exports.getCountriesValuesByYear = (session, params, totReviews, prevArray = nul
       result.records.forEach(record => {
         country = record.get("country");
         !(country in coutriesYear) && (coutriesYear[country] = {});
-        coutriesYear[country][params.YEAR] = Math.round((10000 * record.get("NB1")) / totReviews["NB1"]) / 100;
+        !(params.YEAR in coutriesYear[country]) && (coutriesYear[country][params.YEAR] = {});
+        coutriesYear[country][params.YEAR]['value'] = Math.round((10000 * record.get("NB1")) / totReviews["NB1"]) / 100;
       });
       session.close();
       return coutriesYear;
