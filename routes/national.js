@@ -26,11 +26,8 @@ router.get("/:year/", async (req, res, next) => {
   const monthly = await National.getMonths(dbUtils.getSession(req), params);
   
   // Year
-  National.getTotalByYear(dbUtils.getSession(req), params)
-    .then(totReviews => {
-      return National.getRegionsValuesByYear(dbUtils.getSession(req), params, totReviews)
-    })
-    .then(yearArray => {
+  const totReviews = await National.getTotalByYear(dbUtils.getSession(req), params);
+  National.getRegionsValuesByYear(dbUtils.getSession(req), params, totReviews).then(yearArray => {
       // Year - 1
       National.getTotalByYear(dbUtils.getSession(req), { YEAR: params.YEAR - 1 })
         .then(totReviewsOld => {
@@ -39,6 +36,7 @@ router.get("/:year/", async (req, res, next) => {
         })
         .then(finalArray => {
           writeResponse(res, {
+            'TotalReviews': totReviews,
             'Evolution': Updater.diffGoing(finalArray),
             'Monthly': monthly
           })
