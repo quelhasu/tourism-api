@@ -1,6 +1,6 @@
-exports.getTopRegions = (session, params) => {
+exports.getTopRegions = (session, params) => new Promise((resolve, reject) => {
   var topRegions = [];
-  return session
+  session
     .run('MATCH (a1:Area{country:"France"})-[v:trip{year:{YEAR}}]-> \
     (a2:Area{name:"Aquitaine", country:"France"}) \
     RETURN a1.name as region, \
@@ -10,19 +10,17 @@ exports.getTopRegions = (session, params) => {
       result.records.forEach(record => {
         topRegions.push(record.get("region"));
       });
-      session.close();
-      return topRegions;
+      resolve(topRegions);
     })
     .catch(error => {
       console.log("Erreur : " + error);
-      return null;
+      reject(error);
     })
-}
+})
 
-exports.getTopAreas = (session, params) => {
-  console.log(params);
+exports.getTopAreas = (session, params) => new Promise((resolve, reject) => {
   var topRegions = [];
-  return session
+  session
     .run(`MATCH (a0:AreaGironde)-[a1:trip{year:{YEAR}}]->(a2:AreaGironde) \
     WHERE a0.${params.NAME} = {REGION} AND a2.${params.NAME} = {REGION}\
     RETURN a0.name_3 as shape, sum(a1.nb) as NB \
@@ -32,17 +30,18 @@ exports.getTopAreas = (session, params) => {
         topRegions.push(record.get('shape'));
       });
       session.close();
-      return topRegions;
+      resolve(topRegions);
     })
     .catch(error => {
+      session.close();
       console.log("Erreur : " + error);
-      return null;
+      reject(error);
     })
-}
+})
 
-exports.getTopCountries = (session, params) => {
+exports.getTopCountries = (session, params) => new Promise((resolve, reject) => {
   var topCountries = [];
-  return session 
+  session 
     .run('MATCH (a1:User)-[v:review{year:{YEAR}}]->\
     (a2:Location{region:"Aquitaine", country:"France"}) \
     RETURN a1.country as country, \
@@ -52,36 +51,33 @@ exports.getTopCountries = (session, params) => {
       result.records.forEach(record => {
         topCountries.push(record.get("country"));
       });
-      session.close();
-      return topCountries;
+      resolve(topCountries);
     })
     .catch(error => {
       console.log("Erreur : " + error);
-      return null;
+      reject(error);
     })
-}
+})
 
-exports.getAgeRanges = (session) => {
+exports.getAgeRanges = (session) => new Promise(async (resolve, reject) => {
   var topAges = [];
-  return session
-    .run('MATCH (a:User) return distinct a.age as age \
-    order by age')
+  session
+    .run('MATCH (a:User) return distinct a.age as age order by age')
     .then(result => {
       result.records.forEach(record => {
         topAges.push(record.get("age"));
       })
-      session.close();
-      return topAges;
+      resolve(topAges);
     })
-    .catch(err => {
-      console.log("Erreur : " + err);
-      return null;
+    .catch(error => {
+      console.log("Erreur : " + error);
+      reject(error);
     })
-}
+})
 
-exports.getMonthsValues = (session, params, q, going, aim, array = null) => {
+exports.getMonthsValues = (session, params, q, going, aim, array = null) => new Promise(async (resolve, reject) => {
   cmvalues = array || {};
-  return session
+  session
     .run(q.replace(/{AGES}/g, params.AGES), params)
     .then(result => {
       result.records.forEach(record => {
@@ -91,14 +87,22 @@ exports.getMonthsValues = (session, params, q, going, aim, array = null) => {
         !(going in cmvalues[recordVar]) && (cmvalues[recordVar][going] = { "months": [] })
         cmvalues[recordVar][going].months[month - 1] = record.get("NB");
       });
-
-      return cmvalues;
+      session.close();
+      resolve(cmvalues);
+    })
+    .catch(err => {
+      session.close();
+      reject(err);
     });
-}
+})
 
-exports.getTotByYear = (session, params, q, nbArgs) => {
+/* 
+When session is closed driver sends a reset command to the database. 
+This causes it to terminate ongoing transaction
+*/
+exports.getTotByYear = (session, params, q, nbArgs) => new Promise(async (resolve, reject) => {
   nbTot = {}
-  return session
+  session
     .run(q, params)
     .then(result => {
       result.records.forEach(record => {
@@ -108,10 +112,11 @@ exports.getTotByYear = (session, params, q, nbArgs) => {
       })
       nbTot['Year'] = params.YEAR;
       session.close();
-      return nbTot;
+      resolve(nbTot);
     })
     .catch(err => {
+      session.close();
       console.log("Erreur : " + err);
-      return null;
+      reject(err);
     })
-}
+})

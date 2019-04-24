@@ -54,13 +54,15 @@ router.get("/:year/info", (req, res, next) => {
 });
 
 const getNationalInfo = (req) => {
+  const session = dbUtils.getSession(req);
   return new Promise((resolve, reject) => {
     Promise.all([
-      Info.getTopRegions(dbUtils.getSession(req), params),
-      Info.getTopCountries(dbUtils.getSession(req), params),
-      Info.getAgeRanges(dbUtils.getSession(req)),
+      Info.getTopRegions(session, params),
+      Info.getTopCountries(session, params),
+      Info.getAgeRanges(session, params),
     ])
     .then(([topRegions, topCountries, topAges]) => {
+      session.close();
       resolve({
         "topRegions": topRegions,
         "topCountries": topCountries,
@@ -68,7 +70,9 @@ const getNationalInfo = (req) => {
       })
     })
     .catch(err => {
+      session.close();
       console.log(err);
+      reject(err);
     })
   })
 }
