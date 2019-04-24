@@ -8,7 +8,7 @@ const indexRouter = require('./routes/index');
 const statsRouter = require('./routes/stats');
 const nationalRouter = require('./routes/national');
 const internationalRouter = require('./routes/international');
-const regionalRouter = require('./routes/regional');
+const groupingRouter = require('./routes/grouping');
 
 var app = express();
 
@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-statsRouter,internationalRouter,nationalRouter,regionalRouter.get('/', (req, res, next) => {
+statsRouter,internationalRouter,nationalRouter,groupingRouter.get('/', (req, res, next) => {
   res.send(req.params);
 })
 
@@ -42,7 +42,7 @@ app.use('/', indexRouter);
 app.use('/:city/stats', statsRouter);
 app.use('/:city/national', nationalRouter);
 app.use('/:city/international', internationalRouter);
-app.use('/:city/regional', regionalRouter);
+app.use('/:city/grouping', groupingRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
