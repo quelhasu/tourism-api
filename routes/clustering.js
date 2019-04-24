@@ -4,7 +4,7 @@ var writeResponse = require('../helpers/response').writeResponse
 const Updater = require('../helpers/update');
 var dbUtils = require('../neo4j/dbUtils');
 var Info = require("../models/info");
-var Grouping = require("../models/grouping");
+var Clustering = require("../models/clustering");
 
 
 router.get("/", (req, res, next) => {
@@ -25,17 +25,18 @@ router.get("/:year/:name/:region", async (req, res, next) => {
   params['COUNTRIES'] = Object.keys(req.query).includes('countries') ? req.query.countries.split(',') : tops['topCountries'];
 
   // Monthly evolution
-  const monthly = await Grouping.getMonths(dbUtils.getSession(req), params);
+  const monthly = await Clustering.getMonths(dbUtils.getSession(req), params);
 
   // YEAR
-  const totReviews = await Grouping.getTotalByYear(dbUtils.getSession(req), params);
-  Grouping.getDepValuesByYear(dbUtils.getSession(req), params, totReviews)
+  const totReviews = await Clustering.getTotalByYear(dbUtils.getSession(req), params);
+  Clustering.getDepValuesByYear(dbUtils.getSession(req), params, totReviews)
     .then(async resp => {
       params.YEAR -= 1;
-      const oldTotReviews = await Grouping.getTotalByYear(dbUtils.getSession(req), params);
-      Grouping.getDepValuesByYear(dbUtils.getSession(req), params, oldTotReviews, resp)
+      const oldTotReviews = await Clustering.getTotalByYear(dbUtils.getSession(req), params);
+      Clustering.getDepValuesByYear(dbUtils.getSession(req), params, oldTotReviews, resp)
         .then(finalArray=>{
           writeResponse(res, {
+            'TotalReviews': totReviews,
             "Evolution": Updater.diffGoing(finalArray),
             "Monthly": monthly
           });
@@ -56,7 +57,6 @@ router.get("/:year/:name/:region/info", (req, res, next) => {
 });
 
 const getGroupingInfo = (req) => {
-  console.log(params);
   return new Promise((resolve, reject) => {
     Promise.all([
       Info.getTopCountries(dbUtils.getSession(req), params),
