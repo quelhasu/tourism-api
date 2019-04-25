@@ -24,10 +24,14 @@ exports.diffGoing = (array) => {
   return array;
 };
 
+
 exports.diff = (array) => {
   for (var country in array) {
     for (var year in array[country]) {
-      array[country]['diff'] = array[country][eval(year) + 1] - array[country][year];
+      array[country]['diff'] =
+        {
+          'value': Number(array[country][eval(year) + 1]['value'] - array[country][year]['value']).roundDecimal(2)
+        }
       break;
     }
   }

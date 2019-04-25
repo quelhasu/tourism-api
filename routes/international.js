@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router({ mergeParams: true });
 var writeResponse = require('../helpers/response').writeResponse
-var update = require('../helpers/update');
+var Updater = require('../helpers/update');
 var dbUtils = require('../neo4j/dbUtils');
 var Info = require("../models/info");
 var International = require("../models/international");
@@ -14,7 +14,7 @@ router.get("/:year/", async (req, res, next) => {
   params = {
     YEAR: Number(req.params.year),
     TOP: Number(req.query.limit) || 10,
-    AGES: update.ages(req.query.ages),
+    AGES: Updater.ages(req.query.ages),
   };
 
   const tops = await getInternationalInfo(req);
@@ -33,7 +33,7 @@ router.get("/:year/", async (req, res, next) => {
     International.getCountriesValuesByYear(dbUtils.getSession(req), params, oldTotReviews, values).then(finalArray => {
       writeResponse(res, {
         "TotalReviews": totReviews,
-        "Evolution": diff(finalArray),
+        "Evolution": Updater.diff(finalArray),
         "Monthly": monthly
       });
     })
@@ -66,19 +66,5 @@ const getInternationalInfo = (req) => {
       })
   })
 }
-
-const diff = (array) => {
-  for (var country in array) {
-    for (var year in array[country]) {
-      array[country]['diff'] =
-        {
-          'value': Number(array[country][eval(year) + 1]['value'] - array[country][year]['value']).roundDecimal(2)
-        }
-      break;
-    }
-  }
-  return array;
-}
-
 
 module.exports = router;
