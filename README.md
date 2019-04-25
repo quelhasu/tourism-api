@@ -21,7 +21,7 @@
 	* [Info available for international request](#info-available-for-international-request)
 * [Grouping context](#grouping-context-1)
 	* [Ingoing/outgoing evolution per year](#ingoingoutgoing-evolution-per-year)
-	* [Info available for regional request](#info-available-for-regional-request)
+	* [Info available for clustering request](#info-available-for-clustering-request)
 
 <!-- /code_chunk_output -->
 
@@ -43,10 +43,10 @@
 - [Number of reviews per country for a given year](#number-of-reviews-per-country-for-a-given-year) : `GET /:city/international/:year`
 - [Info available for international request](#info-available-for-international-request) : `GET /:city/internnational/:year/info`
 
-### Grouping context
+### Clustering context
 
-- [Ingoing/outgoing evolution per year](#ingoingoutgoing-evolution-per-year) : `GET /:city/regional/:year/:name/:region`
-- [Info available for grouping request](#info-available-for-regional-request) : `GET /:city/regional/:year/:name/:region/info`
+- [Ingoing/outgoing evolution per year](#ingoingoutgoing-evolution-per-year) : `GET /:city/clustering/:year/:name/:region`
+- [Info available for grouping request](#info-available-for-clustering-request) : `GET /:city/clustering/:year/:name/:region/info`
 
 # Database statistics
 
@@ -334,7 +334,7 @@
 }
 ```
 
-## Info available for regional request
+## Info available for clustering request
 
 |                    |                                                     |
 | ------------------ | --------------------------------------------------- |
