@@ -122,6 +122,7 @@ exports.getTotByYear = (session, params, q, nbArgs) => new Promise(async (resolv
 })
 
 exports.getPageRank = (session, params, q, arg, array=null) => new Promise(async (resolve, reject) => {
+  // console.log(q);
   object = array || {}
   session
     .run(q, params)

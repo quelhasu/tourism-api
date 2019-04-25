@@ -27,6 +27,9 @@ router.get("/:year/:name/:region", async (req, res, next) => {
   // Monthly evolution
   const monthly = await Clustering.getMonths(dbUtils.getSession(req), params);
 
+  // Centrality
+  const centralityArray = await Clustering.getAreasPageRank(dbUtils.getSession(req), params);
+
   // YEAR
   const totReviews = await Clustering.getTotalByYear(dbUtils.getSession(req), params);
   Clustering.getDepValuesByYear(dbUtils.getSession(req), params, totReviews)
@@ -34,8 +37,10 @@ router.get("/:year/:name/:region", async (req, res, next) => {
       params.YEAR -= 1;
       const oldTotReviews = await Clustering.getTotalByYear(dbUtils.getSession(req), params);
       Clustering.getDepValuesByYear(dbUtils.getSession(req), params, oldTotReviews, resp)
-        .then(finalArray=>{
+        .then(async finalArray=>{
+          const centralityFinalArray = await Clustering.getAreasPageRank(dbUtils.getSession(req), params, centralityArray);
           writeResponse(res, {
+            'Centrality': Updater.diff(centralityFinalArray),
             'TotalReviews': totReviews,
             "Evolution": Updater.diffGoing(finalArray),
             "Monthly": monthly
