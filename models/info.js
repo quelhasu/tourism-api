@@ -120,3 +120,24 @@ exports.getTotByYear = (session, params, q, nbArgs) => new Promise(async (resolv
       reject(err);
     })
 })
+
+exports.getPageRank = (session, params, q, arg, array=null) => new Promise(async (resolve, reject) => {
+  object = array || {}
+  session
+    .run(q, params)
+    .then(result => {
+      result.records.forEach(record => {
+        var region = record.get(arg)
+        !(region in object) && (object[region] = {});
+        !(params.YEAR in object[region]) && (object[region][params.YEAR] = {});
+        object[region][params.YEAR]['value'] = record.get("score").roundDecimal(2);
+      })
+      session.close();
+      resolve(object);
+    })
+    .catch(err => {
+      session.close();
+      console.log("Erreur : " + err);
+      reject(err);
+    })
+})

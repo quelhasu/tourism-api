@@ -21,10 +21,14 @@ router.get("/:year/", async (req, res, next) => {
   if (['regions', 'countries'].some(q => !Object.keys(req.query).includes(q))) tops = await getNationalInfo(req);
   params['REGIONS'] = Object.keys(req.query).includes('regions') ? req.query.regions.split(',') : tops['topRegions'];
   params['COUNTRIES'] = Object.keys(req.query).includes('countries') ? req.query.countries.split(',') : tops['topCountries'];
+  params['REGIONS'].push("Aquitaine");
 
   // Monthly evolution
   const monthly = await National.getMonths(dbUtils.getSession(req), params);
-  
+
+  // Centrality
+  const centralityArray = await National.getRegionsPageRank(dbUtils.getSession(req), params);
+
   // Year
   const totReviews = await National.getTotalByYear(dbUtils.getSession(req), params);
   National.getRegionsValuesByYear(dbUtils.getSession(req), params, totReviews).then(yearArray => {
@@ -34,8 +38,10 @@ router.get("/:year/", async (req, res, next) => {
           params.YEAR -= 1;
           return National.getRegionsValuesByYear(dbUtils.getSession(req), params, totReviewsOld, yearArray)
         })
-        .then(finalArray => {
+        .then(async finalArray => {
+          const centralityFinalArray = await National.getRegionsPageRank(dbUtils.getSession(req), params, centralityArray);
           writeResponse(res, {
+            'Centrality': Updater.diff(centralityFinalArray),
             'TotalReviews': totReviews,
             'Evolution': Updater.diffGoing(finalArray),
             'Monthly': monthly
