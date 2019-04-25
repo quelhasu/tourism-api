@@ -153,7 +153,20 @@
 ### Success Response Content Example
 
 ```json
-{
+{ 
+  "Centrality":{
+    "Aquitaine":{
+      "2015":{"value":2.19},
+      "2016":{"value":2.3},
+      "diff":{"value":0.11},
+    },
+    ...
+  },
+  "TotalReviews":{
+    "NB1":17405,
+    "NB2":17484,
+    "Year":2016
+  },
   "Evolution": {
     "Midi-Pyrénées": {
       "2015": {
@@ -230,6 +243,10 @@
 
 ```json
 {
+  "TotalReviews":{
+    "NB1": 183205,
+    "Year": 2016
+  },
   "Evolution": {
     "France": {
       "2015": 57.84,
@@ -296,6 +313,19 @@
 
 ```json
 {
+  "Centrality":{
+    "Bordeaux": {
+      "2015": {"value":104.4},
+      "2016": {"value":108.3},
+      "diff": {"value":3.9}
+    },
+    ...
+  },
+  "TotalReviews":{
+    "NB1":18195,
+    "NB2": 18195,
+    "Year": 2016
+  },
   "Evolution": {
     "Midi-Pyrénées": {
       "2015": {
