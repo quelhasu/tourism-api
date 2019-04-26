@@ -76,7 +76,7 @@ exports.getRegionsPageRank = async (session, params, array=null) => {
     `CALL algo.pageRank.stream(\'MATCH (a:Area{country:"France"}) \
     where a.name in ${paramsCopy.REGIONS} RETURN id(a) as id\', \'\
     MATCH (a0:Area{country:"France"})-[a1:trip{year:${paramsCopy.YEAR}}]->(a2:Area{country:"France"}) \
-    where a0.name in ${paramsCopy.REGIONS} and a1.nat in ${paramsCopy.COUNTRIES} ${paramsCopy.AGES == "" ? "" : JSON.stringify(paramsCopy.AGES)} \
+    where a0.name in ${paramsCopy.REGIONS} and a1.nat in ${paramsCopy.COUNTRIES} ${paramsCopy.AGES == "" ? "" : paramsCopy.AGES.replace(/'/g, '"')} \
     RETURN id(a0) as source, id(a2) as target, sum(toFloat(a1.nb)) as weight\', {graph:\'cypher\', \
     dampingFactor:0.85, iterations:50, write: true, weightProperty:\'weight\'} ) \
     YIELD node, score RETURN node.name AS region,score ORDER BY score DESC;`,

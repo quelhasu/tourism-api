@@ -21,7 +21,7 @@ router.get("/:year/", async (req, res, next) => {
   if (['regions', 'countries'].some(q => !Object.keys(req.query).includes(q))) tops = await getNationalInfo(req);
   params['REGIONS'] = Object.keys(req.query).includes('regions') ? req.query.regions.split(',') : tops['topRegions'];
   params['COUNTRIES'] = Object.keys(req.query).includes('countries') ? req.query.countries.split(',') : tops['topCountries'];
-  params['REGIONS'].push("Aquitaine");
+  // params['REGIONS'].push("Aquitaine");
 
   // Monthly evolution
   const monthly = await National.getMonths(dbUtils.getSession(req), params);
@@ -69,6 +69,7 @@ const getNationalInfo = (req) => {
     ])
     .then(([topRegions, topCountries, topAges]) => {
       session.close();
+      topRegions.push('Aquitaine');
       resolve({
         "topRegions": topRegions,
         "topCountries": topCountries,

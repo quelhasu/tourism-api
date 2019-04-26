@@ -1,5 +1,5 @@
 exports.ages = (age) => {
-  if(age == "all" || age == null)
+  if(age == "all" || age == null || age == "-")
     return "";
   else
     return " and a1.age = '"+age+"'"
