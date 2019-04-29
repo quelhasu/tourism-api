@@ -41,7 +41,7 @@ router.get("/:year/:name/:region", async (req, res, next) => {
           const centralityFinalArray = await Clustering.getAreasPageRank(dbUtils.getSession(req), params, centralityArray);
           writeResponse(res, {
             'Centrality': Updater.diff(centralityFinalArray),
-            'TotalReviews': totReviews,
+            'TotalReviews': {[params.YEAR +1]: totReviews, [params.YEAR]: oldTotReviews, diff: Updater.percentDiff(oldTotReviews, totReviews, [1,2])},
             "Evolution": Updater.diffGoing(finalArray),
             "Monthly": monthly
           });
