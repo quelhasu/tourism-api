@@ -31,18 +31,19 @@ router.get("/:year/", async (req, res, next) => {
 
   // Year
   const totReviews = await National.getTotalByYear(dbUtils.getSession(req), params);
-  National.getRegionsValuesByYear(dbUtils.getSession(req), params, totReviews).then(yearArray => {
+  National.getRegionsValuesByYear(dbUtils.getSession(req), params, totReviews).then(async yearArray => {
       // Year - 1
+      const totReviewsOld = await National.getTotalByYear(dbUtils.getSession(req), { YEAR: params.YEAR - 1 });
       National.getTotalByYear(dbUtils.getSession(req), { YEAR: params.YEAR - 1 })
-        .then(totReviewsOld => {
-          params.YEAR -= 1;
-          return National.getRegionsValuesByYear(dbUtils.getSession(req), params, totReviewsOld, yearArray)
-        })
+        params.YEAR -= 1;
+        National.getRegionsValuesByYear(dbUtils.getSession(req), params, totReviewsOld, yearArray)
         .then(async finalArray => {
+          console.log(params.YEAR + 1);
+          console.log(params.YEAR);
           const centralityFinalArray = await National.getRegionsPageRank(dbUtils.getSession(req), params, centralityArray);
           writeResponse(res, {
             'Centrality': Updater.diff(centralityFinalArray),
-            'TotalReviews': totReviews,
+            'TotalReviews': {[params.YEAR +1]: totReviews, [params.YEAR]: totReviewsOld, diff: Updater.percentDiff(totReviewsOld, totReviews)},
             'Evolution': Updater.diffGoing(finalArray),
             'Monthly': monthly
           })

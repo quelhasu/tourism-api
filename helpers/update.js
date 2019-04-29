@@ -38,6 +38,13 @@ exports.diff = (array) => {
   return array;
 }
 
+exports.percentDiff = (oldV, newV) => {
+  return {
+    "NB1": (((newV.NB1-oldV.NB1)/oldV.NB1)*100).roundDecimal(2),
+    "NB2": (((newV.NB2-oldV.NB2)/oldV.NB2)*100).roundDecimal(2)
+  }
+}
+
 Number.prototype.roundDecimal = function (nbDec) {
   // +(val) => string converted to a Number
   return +(Math.round(this + "e+" + nbDec)  + "e-" + nbDec);
