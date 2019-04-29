@@ -32,7 +32,7 @@ router.get("/:year/", async (req, res, next) => {
     const oldTotReviews = await International.getTotalByYear(dbUtils.getSession(req), params);
     International.getCountriesValuesByYear(dbUtils.getSession(req), params, oldTotReviews, values).then(finalArray => {
       writeResponse(res, {
-        "TotalReviews": totReviews,
+        "TotalReviews": {[params.YEAR +1]: totReviews, [params.YEAR]: oldTotReviews, diff: Updater.percentDiff(oldTotReviews, totReviews)},
         "Evolution": Updater.diff(finalArray),
         "Monthly": monthly
       });

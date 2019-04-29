@@ -38,12 +38,10 @@ router.get("/:year/", async (req, res, next) => {
         params.YEAR -= 1;
         National.getRegionsValuesByYear(dbUtils.getSession(req), params, totReviewsOld, yearArray)
         .then(async finalArray => {
-          console.log(params.YEAR + 1);
-          console.log(params.YEAR);
           const centralityFinalArray = await National.getRegionsPageRank(dbUtils.getSession(req), params, centralityArray);
           writeResponse(res, {
             'Centrality': Updater.diff(centralityFinalArray),
-            'TotalReviews': {[params.YEAR +1]: totReviews, [params.YEAR]: totReviewsOld, diff: Updater.percentDiff(totReviewsOld, totReviews)},
+            'TotalReviews': {[params.YEAR +1]: totReviews, [params.YEAR]: totReviewsOld, diff: Updater.percentDiff(totReviewsOld, totReviews, [1,2])},
             'Evolution': Updater.diffGoing(finalArray),
             'Monthly': monthly
           })

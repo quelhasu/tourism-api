@@ -38,11 +38,12 @@ exports.diff = (array) => {
   return array;
 }
 
-exports.percentDiff = (oldV, newV) => {
-  return {
-    "NB1": (((newV.NB1-oldV.NB1)/oldV.NB1)*100).roundDecimal(2),
-    "NB2": (((newV.NB2-oldV.NB2)/oldV.NB2)*100).roundDecimal(2)
-  }
+exports.percentDiff = (oldV, newV, nbVal = [1]) => {
+  let obj = {};
+  nbVal.forEach(i => {
+    obj[`NB${i}`] = (((newV[`NB${i}`]-oldV[`NB${i}`])/oldV[`NB${i}`])*100).roundDecimal(2)
+  })
+  return obj;
 }
 
 Number.prototype.roundDecimal = function (nbDec) {
