@@ -19,7 +19,7 @@
 * [International context](#international-context-1)
 	* [Number of reviews per country for a given year](#number-of-reviews-per-country-for-a-given-year)
 	* [Info available for international request](#info-available-for-international-request)
-* [Grouping context](#grouping-context-1)
+* [Clustering context](#clustering-context-1)
 	* [Ingoing/outgoing evolution per year](#ingoingoutgoing-evolution-per-year)
 	* [Info available for clustering request](#info-available-for-clustering-request)
 
@@ -163,9 +163,17 @@
     ...
   },
   "TotalReviews":{
-    "NB1":17405,
-    "NB2":17484,
-    "Year":2016
+    "Aquitaine": {
+      "2013": {
+        "value": 2.15
+      },
+      "2014": {
+        "value": 2.18
+      },
+      "diff": {
+        "value": 0.03
+      },
+      ...
   },
   "Evolution": {
     "Midi-Pyrénées": {
@@ -244,8 +252,17 @@
 ```json
 {
   "TotalReviews":{
-    "NB1": 183205,
-    "Year": 2016
+    "2012": {
+      "NB1": 22597,
+      "Year": 2012
+    },
+    "2013": {
+      "NB1": 48273,
+      "Year": 2013
+    },
+    "diff": {
+      "NB1": 113.63
+    }
   },
   "Evolution": {
     "France": {
@@ -292,7 +309,7 @@
 }
 ```
 
-# Grouping context
+# Clustering context
 
 ## Ingoing/outgoing evolution per year
 
@@ -315,9 +332,15 @@
 {
   "Centrality":{
     "Bordeaux": {
-      "2015": {"value":104.4},
-      "2016": {"value":108.3},
-      "diff": {"value":3.9}
+      "2015": {
+        "value": 104.4
+      },
+      "2016": {
+        "value": 108.3
+      },
+      "diff": {
+        "value": 3.9
+      }
     },
     ...
   },
@@ -357,6 +380,7 @@
             "high": 0
           }
           ...
+        ]
       },
       "Outgoing": {...}
     }
