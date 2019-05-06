@@ -1,6 +1,24 @@
 const update = require("../helpers/update");
 const Info = require("./info");
 
+/**
+ * @namespace National
+ */
+
+/**
+ * Finds ingoing and outgoing trips made between countries 
+ * in France and areas in Aquitaine for a given year
+ * 
+ * @function getRegionsValuesByYear
+ * @memberof National
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * @param {Number} totReviews - Total number of reviews for the given year
+ * @param {Object[]} [prevArray] - Found object array to concatenate different year stat 
+ * 
+ * @return {Object} Object with the year and percent of users found for a given year
+ */
 exports.getRegionsValuesByYear = (session, params, totReviews, prevArray = null) => {
   var regionsYear = prevArray || {};
   return session
@@ -29,6 +47,18 @@ exports.getRegionsValuesByYear = (session, params, totReviews, prevArray = null)
     });
 };
 
+/**
+ * Finds the number of ingoing and outgoing trips made between countries 
+ * in France and areas in Aquitaine for a given year
+ * 
+ * @function getTotalByYear
+ * @memberof National
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * 
+ * @return {Object} Object with the year and number of users found
+ */
 exports.getTotalByYear = (session, params) => {
   return Info.getTotByYear(session, params,
     'MATCH (a0:Area{country:"France"}) -[a1:trip{year:{YEAR}}]- \
@@ -38,6 +68,18 @@ exports.getTotalByYear = (session, params) => {
     [1,2]);
 };
 
+/**
+ * Finds the number of ingoing and outgoing trips made between countries 
+ * in France and areas in Aquitaine by month for a given year 
+ * 
+ * @function getMonths
+ * @memberof National
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * 
+ * @return {Object} Object with each country and number of reviews by month
+ */
 exports.getMonths = (session, params) => {
   return Info.getMonthsValues(
     session,
@@ -65,6 +107,18 @@ exports.getMonths = (session, params) => {
     })
 };
 
+/**
+ * Finds page rank score for regions in France
+ * 
+ * @function getRegionsPageRank
+ * @memberof National
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * @param {Object[]} [array] - Found object array to concatenate different year stat 
+
+ * @return {Object} Object with each year and its value page rank
+ */
 exports.getRegionsPageRank = async (session, params, array=null) => {
   paramsCopy = JSON.parse(JSON.stringify(params));
   ['REGIONS', 'COUNTRIES'].forEach(variable => {
