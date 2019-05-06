@@ -24,6 +24,9 @@ exports.diffGoing = (array) => {
   return array;
 };
 
+exports.formatNumber = (num) => {
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ')
+}
 
 exports.diff = (array) => {
   for (var country in array) {

@@ -1,3 +1,18 @@
+const Updater = require("../helpers/update");
+
+/**
+ * @namespace Stats
+ */
+
+/**
+ * Finds number users that reviewed something until 2010
+ * @function getDatabaseStats
+ * @memberof Stats
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * 
+ * @return {Object} Object with different statistics (number of users/reviews ...)
+ */
 exports.getDatabaseStats = (session) => {
   vYears = {};
   return session
@@ -7,9 +22,9 @@ exports.getDatabaseStats = (session) => {
         y = record.get("YEAR").low;
         vYears[y] = {
           "year": y,
-          "users": formatNumber(record.get("NBU")),
+          "users": Updater.formatNumber(record.get("NBU")),
           "?": 0,
-          "reviews": formatNumber(record.get("NB"))
+          "reviews": Updater.formatNumber(record.get("NB"))
         };
       });
       session.close();
@@ -21,6 +36,17 @@ exports.getDatabaseStats = (session) => {
     })
 }
 
+/**
+ * Finds users that reviews something for a given year and a specific country
+ * @function getDatabaseCountryStats
+ * @memberof Stats
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * @param {Object[]} [vYears] - Found object array to concatenate different year stat 
+ * 
+ * @return {Object} Object with the year and number of users found
+ */
 exports.getDatabaseCountryStats = (session, params, vYears) => {
   var vYears = vYears || {};
   return session
@@ -29,7 +55,7 @@ exports.getDatabaseCountryStats = (session, params, vYears) => {
       result.records.forEach(record=>{
         y = record.get("YEAR").low;
         !(y in vYears) && (vYears[y]={})
-        vYears[y][params.COUNTRY] = formatNumber(record.get("NB"));
+        vYears[y][params.COUNTRY] = Updater.formatNumber(record.get("NB"));
       })
       session.close();
       return vYears;
@@ -40,6 +66,17 @@ exports.getDatabaseCountryStats = (session, params, vYears) => {
     })
 }
 
+/**
+ * Finds users that reviews something for a given year and a specific department
+ * @function getDatabaseDepStats
+ * @memberof Stats
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * @param {Object[]} [vYears] - Found object array to concatenate different year stat 
+ * 
+ * @return {Object} Object with the year and number of users found
+ */
 exports.getDatabaseDepStats = (session, params, vYears) => {
   var vYears = vYears || {};
   return session
@@ -48,7 +85,7 @@ exports.getDatabaseDepStats = (session, params, vYears) => {
       result.records.forEach(record=>{
         y = record.get("YEAR").low;
         !(y in vYears) && (vYears[y]={})
-        vYears[y][params.DEP] = formatNumber(record.get("NB"));
+        vYears[y][params.DEP] = Updater.formatNumber(record.get("NB"));
       })
       session.close();
       return vYears;
@@ -57,9 +94,4 @@ exports.getDatabaseDepStats = (session, params, vYears) => {
       console.log("Erreur : " + error);
       return null;
     })
-}
-
-
-function formatNumber(num) {
-  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ')
 }
