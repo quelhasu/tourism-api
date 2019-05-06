@@ -69,7 +69,7 @@ exports.getTotalByYear = (session, params) => {
 };
 
 /**
- * Finds the number of ingoing and outgoing trips made between countries 
+ * Finds the number of ingoing and outgoing trips made between regions 
  * in France and areas in Aquitaine by month for a given year 
  * 
  * @function getMonths
@@ -78,7 +78,7 @@ exports.getTotalByYear = (session, params) => {
  * @param {Object} sessions - Neo4j context session
  * @param {Object} params - Query's parameters
  * 
- * @return {Object} Object with each country and number of reviews by month
+ * @return {Object} Object with each region and number of reviews by month
  */
 exports.getMonths = (session, params) => {
   return Info.getMonthsValues(

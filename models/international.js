@@ -1,5 +1,21 @@
 const Info = require('./info');
 
+/**
+ * @namespace International
+ */
+
+/**
+ * Finds the number of ingoing and outgoing trips made between countries 
+ * in France and areas in Aquitaine for a given year
+ * 
+ * @function getTotalByYear
+ * @memberof International
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * 
+ * @return {Object} Object with the year and number of users found
+ */
 exports.getTotalByYear = (session, params) => {
   return Info.getTotByYear(session, params,
     'MATCH (a1:User)-[v:review{year:{YEAR}}]->\
@@ -9,6 +25,20 @@ exports.getTotalByYear = (session, params) => {
     [1]);
 }
 
+/**
+ * Finds the number of users that reviewed a location in 
+ * Aquitaine - France per country for a given year
+ * 
+ * @function getCountriesValuesByYear 
+ * @memberof International
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * @param {Number} totReviews - Total number of reviews for the given year
+ * @param {Object[]} [prevArray] - Found object array to concatenate different year stat 
+ * 
+ * @return {Object} Object with the year and number of reviews found
+ */
 exports.getCountriesValuesByYear = (session, params, totReviews, prevArray = null) => {
   var coutriesYear = prevArray || {};
   return session
@@ -34,6 +64,18 @@ exports.getCountriesValuesByYear = (session, params, totReviews, prevArray = nul
     });
 }
 
+/**
+ * Finds the number of ingoing and outgoing trips made between countries 
+ * in France and areas in Aquitaine by month for a given year 
+ * 
+ * @function getMonths
+ * @memberof International
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * 
+ * @return {Object} Object with each country and number of reviews by month
+ */
 exports.getMonths = (session, params) => {
   return Info.getMonthsValues(
     session,
