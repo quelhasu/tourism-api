@@ -57,7 +57,7 @@ exports.getRegionsValuesByYear = (session, params, totReviews, prevArray = null)
  * @param {Object} sessions - Neo4j context session
  * @param {Object} params - Query's parameters
  * 
- * @return {Object} Object with the year and number of users found
+ * @return {Object} Object with the year and number of trips found
  */
 exports.getTotalByYear = (session, params) => {
   return Info.getTotByYear(session, params,

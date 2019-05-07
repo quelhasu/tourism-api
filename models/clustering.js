@@ -1,5 +1,21 @@
 const Info = require('./info');
 
+/**
+ * @namespace Clustering
+ */
+
+ /**
+ * Finds the number of ingoing and outgoing trips made 
+ * between two areas for a given year
+ * 
+ * @function getTotalByYear
+ * @memberof Clustering
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * 
+ * @return {Object} Object with the year and number of trips found
+ */
 exports.getTotalByYear = (session, params) => {
   return Info.getTotByYear(session, params,
     `MATCH (a0:AreaGironde)-[a1:trip{year:{YEAR}}]-(a2:AreaGironde)\
@@ -9,6 +25,19 @@ exports.getTotalByYear = (session, params) => {
     [1, 2]);
 }
 
+/**
+ * Finds ingoing and outgoing trips made between two areas for a given year
+ * 
+ * @function getDepValuesByYear
+ * @memberof Clustering
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * @param {Number} totReviews - Total number of reviews for the given year
+ * @param {Object[]} [prevArray] - Found object array to concatenate different year stat 
+ * 
+ * @return {Object} Object with the year and percent of users found for a given year
+ */
 exports.getDepValuesByYear = (session, params, totReviews, prevArray = null) => {
   var regionsYear = prevArray || {};
   return session
@@ -37,6 +66,18 @@ exports.getDepValuesByYear = (session, params, totReviews, prevArray = null) => 
     });
 };
 
+/**
+ * Finds the number of ingoing and outgoing trips made between areas 
+ * by month for a given year 
+ * 
+ * @function getMonths
+ * @memberof Clustering
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * 
+ * @return {Object} Object with each region and number of reviews by month
+ */
 exports.getMonths = (session, params) => {
   return Info.getMonthsValues(
     session,
@@ -66,6 +107,18 @@ exports.getMonths = (session, params) => {
     });
 };
 
+/**
+ * Finds page rank score for areas in France
+ * 
+ * @function getAreasPageRank
+ * @memberof Clustering
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * @param {Object[]} [array] - Found object array to concatenate different year stat 
+
+ * @return {Object} Object with each year and its value page rank
+ */
 exports.getAreasPageRank = async (session, params, array=null) => {
   paramsCopy = JSON.parse(JSON.stringify(params));
   ['AREAS', 'COUNTRIES'].forEach(variable => {
