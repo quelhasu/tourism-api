@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "live": "nodemon ./bin/www"
+    "live": "nodemon ./bin/www",
+    "docs": "jsdoc ./ --configure conf.json && mv ./docs/tourism-api/*/* ./docs"
   },
   "dependencies": {
     "apidoc": "^0.17.7",
@@ -19,5 +20,8 @@
     "nodemon": "^1.18.10",
     "pug": "2.0.0-beta11",
     "swagger-node-express": "^2.1.3"
+  },
+  "devDependencies": {
+    "minami": "^1.2.3"
   }
 }
