@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Stats - Documentation</title>
+    <title>Global - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Stats</h1>
+    <h1 class="page-title">Global</h1>
     
 
     
@@ -42,7 +42,7 @@
 <header>
     
         <h2>
-        Stats
+        
         </h2>
         
     
@@ -83,11 +83,6 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_stats.js.html">models/stats.js</a>, <a href="models_stats.js.html#line3">line 3</a>
-    </li></ul></dd>
-    
 
     
 
@@ -122,14 +117,14 @@
 
     
 
-    <h4 class="name" id=".getDatabaseCountryStats"><span class="type-signature">(static) </span>getDatabaseCountryStats<span class="signature">(sessions, params, vYears<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="ages"><span class="type-signature"></span>ages<span class="signature">(age)</span><span class="type-signature"> &rarr; {String}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Finds users that reviews something for a given year and a specific country</p>
+    <p>Formats age for query process</p>
 </div>
 
 
@@ -165,7 +160,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_stats.js.html">models/stats.js</a>, <a href="models_stats.js.html#line39">line 39</a>
+        <a href="helpers_update.js.html">helpers/update.js</a>, <a href="helpers_update.js.html#line7">line 7</a>
     </li></ul></dd>
     
 
@@ -197,8 +192,6 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -211,102 +204,24 @@
 
         <tr>
             
-                <td class="name"><code>sessions</code></td>
+                <td class="name"><code>age</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>String</code></span>
 
 
             
             </td>
 
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
             
 
             
 
             <td class="description last">
-                <p>Neo4j context session</p>
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>params</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <p>Query's parameters</p>
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>vYears</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Array.&lt;Object></code></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <p>Found object array to concatenate different year stat</p>
+                <p>String to modify</p>
                 
             </td>
         </tr>
@@ -339,7 +254,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>String</code></span>
 
 
     </dd>
@@ -347,7 +262,7 @@
 
 
 <div class="param-desc">
-    <p>Object with the year and number of users found</p>
+    <p>formated string</p>
 </div>
 
     
@@ -362,14 +277,14 @@
 
     
 
-    <h4 class="name" id=".getDatabaseDepStats"><span class="type-signature">(static) </span>getDatabaseDepStats<span class="signature">(sessions, params, vYears<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="capitalize"><span class="type-signature"></span>capitalize<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Finds users that reviews something for a given year and a specific department</p>
+    <p>Capitalize a given string</p>
 </div>
 
 
@@ -405,7 +320,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_stats.js.html">models/stats.js</a>, <a href="models_stats.js.html#line69">line 69</a>
+        <a href="helpers_update.js.html">helpers/update.js</a>, <a href="helpers_update.js.html#line101">line 101</a>
     </li></ul></dd>
     
 
@@ -422,138 +337,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>sessions</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <p>Neo4j context session</p>
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>params</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <p>Query's parameters</p>
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>vYears</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Array.&lt;Object></code></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <p>Found object array to concatenate different year stat</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -579,7 +362,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>String</code></span>
 
 
     </dd>
@@ -587,7 +370,7 @@
 
 
 <div class="param-desc">
-    <p>Object with the year and number of users found</p>
+    <p>formated string</p>
 </div>
 
     
@@ -602,14 +385,14 @@
 
     
 
-    <h4 class="name" id=".getDatabaseStats"><span class="type-signature">(static) </span>getDatabaseStats<span class="signature">(sessions)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="diff"><span class="type-signature"></span>diff<span class="signature">(region)</span><span class="type-signature"> &rarr; {String}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Finds number users that reviewed something until 2010</p>
+    <p>Create differential array to compare values over years</p>
 </div>
 
 
@@ -645,7 +428,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_stats.js.html">models/stats.js</a>, <a href="models_stats.js.html#line7">line 7</a>
+        <a href="helpers_update.js.html">helpers/update.js</a>, <a href="helpers_update.js.html#line61">line 61</a>
     </li></ul></dd>
     
 
@@ -689,13 +472,13 @@
 
         <tr>
             
-                <td class="name"><code>sessions</code></td>
+                <td class="name"><code>region</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>String</code></span>
 
 
             
@@ -706,7 +489,7 @@
             
 
             <td class="description last">
-                <p>Neo4j context session</p>
+                <p>String to modify</p>
                 
             </td>
         </tr>
@@ -739,7 +522,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>String</code></span>
 
 
     </dd>
@@ -747,7 +530,915 @@
 
 
 <div class="param-desc">
-    <p>Object with different statistics (number of users/reviews ...)</p>
+    <p>formated string</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="diffGoing"><span class="type-signature"></span>diffGoing<span class="signature">(region)</span><span class="type-signature"> &rarr; {String}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Create differential array to compare ingoing/outgoig values over years</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="helpers_update.js.html">helpers/update.js</a>, <a href="helpers_update.js.html#line30">line 30</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>region</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>String</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>String to modify</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>String</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p>formated string</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="formatNumber"><span class="type-signature"></span>formatNumber<span class="signature">(num)</span><span class="type-signature"> &rarr; {String}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Format number to process query</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="helpers_update.js.html">helpers/update.js</a>, <a href="helpers_update.js.html#line51">line 51</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>num</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>Number</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>String to modify</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>String</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p>formated string</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="nameQuery"><span class="type-signature"></span>nameQuery<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Formats string for process query</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="helpers_update.js.html">helpers/update.js</a>, <a href="helpers_update.js.html#line112">line 112</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>String</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p>formated string</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="percentDiff"><span class="type-signature"></span>percentDiff<span class="signature">(region)</span><span class="type-signature"> &rarr; {String}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Get evolution over two years (Y/Y-1)</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="helpers_update.js.html">helpers/update.js</a>, <a href="helpers_update.js.html#line80">line 80</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>region</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>String</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>String to modify</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>String</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p>formated string</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="region"><span class="type-signature"></span>region<span class="signature">(region)</span><span class="type-signature"> &rarr; {String}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Formats region for query process</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="helpers_update.js.html">helpers/update.js</a>, <a href="helpers_update.js.html#line20">line 20</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>region</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>String</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>String to modify</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>String</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p>formated string</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="roundDecimal"><span class="type-signature"></span>roundDecimal<span class="signature">(nbDec)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Round decimal according a given number of decimal</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="helpers_update.js.html">helpers/update.js</a>, <a href="helpers_update.js.html#line88">line 88</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>nbDec</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>Number</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Number of decimal</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>Number</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p>formated decimal</p>
 </div>
 
     
