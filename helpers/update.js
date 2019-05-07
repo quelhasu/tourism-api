@@ -28,18 +28,24 @@ exports.region = (region) => {
  * @return {String} formated string 
  */
 exports.diffGoing = (array) => {
-  for (var region in array) {
-    for (var year in array[region]) {
-      ingoing = Number(array[region][eval(year) + 1]['Ingoing'] - array[region][year]['Ingoing']);
-      outgoing = Number(array[region][eval(year) + 1]['Outgoing'] - array[region][year]['Outgoing']);
-      array[region]['diff'] = {
-        'Ingoing': ingoing.roundDecimal(2),
-        'Outgoing': outgoing.roundDecimal(2)
+  try{
+    for (var region in array) {
+      for (var year in array[region]) {
+        ingoing = Number(array[region][eval(year) + 1]['Ingoing'] - array[region][year]['Ingoing']);
+        outgoing = Number(array[region][eval(year) + 1]['Outgoing'] - array[region][year]['Outgoing']);
+        array[region]['diff'] = {
+          'Ingoing': ingoing.roundDecimal(2),
+          'Outgoing': outgoing.roundDecimal(2)
+        }
+        break;
       }
-      break;
     }
+    return array;
   }
-  return array;
+  catch(e) {
+    console.log("ERR on diff:" + e);
+    return null;
+  }
 };
 
 /**
@@ -59,6 +65,7 @@ exports.formatNumber = (num) => {
  * @return {String} formated string 
  */
 exports.diff = (array) => {
+  try{
   for (var country in array) {
     for (var year in array[country]) {
       array[country]['diff'] =
@@ -69,6 +76,11 @@ exports.diff = (array) => {
     }
   }
   return array;
+}
+catch(e) {
+  console.log("ERR on diff:" + e);
+  return null;
+}
 }
 
 /**

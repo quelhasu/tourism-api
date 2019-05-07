@@ -23,6 +23,8 @@ router.get("/:year/", async (req, res, next) => {
   params['COUNTRIES'] = Object.keys(req.query).includes('countries') ? req.query.countries.split(',') : tops['topCountries'];
   // params['REGIONS'].push("Aquitaine");
 
+
+
   // Monthly evolution
   const monthly = await National.getMonths(dbUtils.getSession(req), params);
 
