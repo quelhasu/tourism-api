@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>info.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Namespaces</li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Clustering.html">Clustering</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Clustering.html#.getAreasPageRank">getAreasPageRank</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Clustering.html#.getDepValuesByYear">getDepValuesByYear</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Clustering.html#.getMonths">getMonths</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Clustering.html#.getTotalByYear">getTotalByYear</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Info.html">Info</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Info.html#.getAgeRanges">getAgeRanges</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Info.html#.getMonthsValues">getMonthsValues</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Info.html#.getPageRank">getPageRank</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Info.html#.getTopAreas">getTopAreas</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Info.html#.getTopCountries">getTopCountries</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Info.html#.getTopRegions">getTopRegions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Info.html#.getTotByYear">getTotByYear</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="International.html">International</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="International.html#.getCountriesValuesByYear">getCountriesValuesByYear</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="International.html#.getMonths">getMonths</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="International.html#.getTotalByYear">getTotalByYear</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="National.html">National</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="National.html#.getMonths">getMonths</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="National.html#.getRegionsPageRank">getRegionsPageRank</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="National.html#.getRegionsValuesByYear">getRegionsValuesByYear</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="National.html#.getTotalByYear">getTotalByYear</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Stats.html">Stats</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Stats.html#.getDatabaseCountryStats">getDatabaseCountryStats</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Stats.html#.getDatabaseDepStats">getDatabaseDepStats</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Stats.html#.getDatabaseStats">getDatabaseStats</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">info.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @namespace Info
+ */
+
+
+ /**
+ * Finds all regions and its number of trips for all trip between France and 
+ * Aquitaine - France for a given year 
+ * 
+ * @function getTopRegions
+ * @memberof Info
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * 
+ * @return {String[]} Array with all regions found
+ */
+exports.getTopRegions = (session, params) => new Promise((resolve, reject) => {
+  var topRegions = [];
+  session
+    .run('MATCH (a1:Area{country:"France"})-[v:trip{year:{YEAR}}]-> \
+    (a2:Area{name:"Aquitaine", country:"France"}) \
+    RETURN a1.name as region, \
+    sum(v.nb) as NB order by NB \
+    desc LIMIT {TOP}', params)
+    .then(result => {
+      result.records.forEach(record => {
+        topRegions.push(record.get("region"));
+      });
+      resolve(topRegions);
+    })
+    .catch(error => {
+      console.log("Erreur : " + error);
+      reject(error);
+    })
+})
+
+ /**
+ * Finds all areas and its number of trips for all trip between two areas
+ * for a given year and region
+ * 
+ * @function getTopAreas
+ * @memberof Info
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * 
+ * @return {String[]} Array with all areas found
+ */
+exports.getTopAreas = (session, params) => new Promise((resolve, reject) => {
+  var topRegions = [];
+  session
+    .run(`MATCH (a0:AreaGironde)-[a1:trip{year:{YEAR}}]->(a2:AreaGironde) \
+    WHERE a0.${params.NAME} = {REGION} AND a2.${params.NAME} = {REGION}\
+    RETURN a0.name_3 as shape, sum(a1.nb) as NB \
+    order by NB desc LIMIT {TOP}`, params)
+    .then(result => {
+      result.records.forEach(record => {
+        topRegions.push(record.get('shape'));
+      });
+      session.close();
+      resolve(topRegions);
+    })
+    .catch(error => {
+      session.close();
+      console.log("Erreur : " + error);
+      reject(error);
+    })
+})
+
+ /**
+ * Finds all countries and its number of users that reviewed a 
+ * location in Aquitaine - France for a given year 
+ * 
+ * @function getTopCountries
+ * @memberof Info
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * 
+ * @return {String[]} Array with all countries found
+ */
+exports.getTopCountries = (session, params) => new Promise((resolve, reject) => {
+  var topCountries = [];
+  session 
+    .run('MATCH (a1:User)-[v:review{year:{YEAR}}]->\
+    (a2:Location{region:"Aquitaine", country:"France"}) \
+    RETURN a1.country as country, \
+    count(*) as NB order by  NB \
+    desc LIMIT {TOP}', params)
+    .then(result => {
+      result.records.forEach(record => {
+        topCountries.push(record.get("country"));
+      });
+      resolve(topCountries);
+    })
+    .catch(error => {
+      console.log("Erreur : " + error);
+      reject(error);
+    })
+})
+
+ /**
+ * Finds all age ranges available
+ * 
+ * @function getAgeRanges
+ * @memberof Info
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * 
+ * @return {String[]} Array with all age ranges found
+ */
+exports.getAgeRanges = (session) => new Promise(async (resolve, reject) => {
+  var topAges = [];
+  session
+    .run('MATCH (a:User) return distinct a.age as age order by age')
+    .then(result => {
+      result.records.forEach(record => {
+        topAges.push(record.get("age"));
+      })
+      resolve(topAges);
+    })
+    .catch(error => {
+      console.log("Erreur : " + error);
+      reject(error);
+    })
+})
+
+/**
+ * Query process to create object with month evolution for each aim value 
+ * (e.g regions, countries...)
+ * 
+ * @function getMonthsValues
+ * @memberof Info
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * @param {String} q - Query to process
+ * @param {String} going - Ingoing or Outgoing key to process
+ * @param {String} aim - Aim value to find
+ * @param {Object[]} [array] - Found object array to concatenate different year stat 
+ * 
+ * @return {String[]} Object with each region and number of reviews by month
+ */
+exports.getMonthsValues = (session, params, q, going, aim, array = null) => new Promise(async (resolve, reject) => {
+  cmvalues = array || {};
+  session
+    .run(q.replace(/{AGES}/g, params.AGES), params)
+    .then(result => {
+      result.records.forEach(record => {
+        recordVar = record.get(aim);
+        month = record.get("month");
+        !(recordVar in cmvalues) &amp;&amp; (cmvalues[recordVar] = {});
+        !(going in cmvalues[recordVar]) &amp;&amp; (cmvalues[recordVar][going] = { "months": [] })
+        cmvalues[recordVar][going].months[month - 1] = record.get("NB");
+      });
+      session.close();
+      resolve(cmvalues);
+    })
+    .catch(err => {
+      session.close();
+      reject(err);
+    });
+})
+
+/* 
+When session is closed driver sends a reset command to the database. 
+This causes it to terminate ongoing transaction
+*/
+
+/**
+ * Query process to get total number of reviews for a given year
+ * 
+ * @function getTotByYear
+ * @memberof Info
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * @param {String} q - Query to proces
+ * @param {Array} nbArgs - Array of number to represent type of value to find (e.g. ingoing/outgoing)
+ * 
+ * @return {Object} Object with year and its number value
+ */
+exports.getTotByYear = (session, params, q, nbArgs) => new Promise(async (resolve, reject) => {
+  nbTot = {}
+  session
+    .run(q, params)
+    .then(result => {
+      result.records.forEach(record => {
+        nbArgs.forEach(i => {
+          nbTot['NB'+i] = record.get("NB"+i).low;
+        })
+      })
+      nbTot['Year'] = params.YEAR;
+      session.close();
+      resolve(nbTot);
+    })
+    .catch(err => {
+      session.close();
+      console.log("Erreur : " + err);
+      reject(err);
+    })
+})
+
+/**
+ *  Page rank process according a given query
+ * 
+ * @function getPageRank
+ * @memberof Info
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * @param {String} q - Query to process
+ * @param {String} arg - key to find in the database (e.g. regions, countries)
+ * @param {Object[]} [array] - Found object array to concatenate different year stat
+ *  
+ * @return {Object} Object with each arg and its score value
+ */
+exports.getPageRank = (session, params, q, arg, array=null) => new Promise(async (resolve, reject) => {
+  object = array || {}
+  session
+    .run(q, params)
+    .then(result => {
+      result.records.forEach(record => {
+        var region = record.get(arg)
+        !(region in object) &amp;&amp; (object[region] = {});
+        !(params.YEAR in object[region]) &amp;&amp; (object[region][params.YEAR] = {});
+        object[region][params.YEAR]['value'] = record.get("score").roundDecimal(2);
+      })
+      session.close();
+      resolve(object);
+    })
+    .catch(err => {
+      session.close();
+      console.log("Erreur : " + err);
+      reject(err);
+    })
+})</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon May 06 2019 14:48:17 GMT+0200 (CEST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Namespaces</li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Clustering.html">Clustering</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Clustering.html#.getAreasPageRank">getAreasPageRank</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Clustering.html#.getDepValuesByYear">getDepValuesByYear</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Clustering.html#.getMonths">getMonths</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Clustering.html#.getTotalByYear">getTotalByYear</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Info.html">Info</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Info.html#.getAgeRanges">getAgeRanges</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Info.html#.getMonthsValues">getMonthsValues</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Info.html#.getPageRank">getPageRank</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Info.html#.getTopAreas">getTopAreas</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Info.html#.getTopCountries">getTopCountries</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Info.html#.getTopRegions">getTopRegions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Info.html#.getTotByYear">getTotByYear</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="International.html">International</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="International.html#.getCountriesValuesByYear">getCountriesValuesByYear</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="International.html#.getMonths">getMonths</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="International.html#.getTotalByYear">getTotalByYear</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="National.html">National</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="National.html#.getMonths">getMonths</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="National.html#.getRegionsPageRank">getRegionsPageRank</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="National.html#.getRegionsValuesByYear">getRegionsValuesByYear</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="National.html#.getTotalByYear">getTotalByYear</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Stats.html">Stats</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Stats.html#.getDatabaseCountryStats">getDatabaseCountryStats</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Stats.html#.getDatabaseDepStats">getDatabaseDepStats</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Stats.html#.getDatabaseStats">getDatabaseStats</a></span></li>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><p><img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/81/airplane_2708.png" align=right height=80></p>
+<h1>Tourism API</h1><blockquote>
+<p>REST API to query Neo4J Tourism Database</p>
+</blockquote>
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=2 orderedList=false} -->
+<!-- code_chunk_output -->
+<ul>
+<li><a href="#tourism-api">Tourism API</a><ul>
+<li><a href="#endpoints">Endpoints</a></li>
+</ul>
+</li>
+<li><a href="#database-statistics-1">Database statistics</a><ul>
+<li><a href="#show-number-of-usersreviews-per-year">Show number of users/reviews per year</a></li>
+<li><a href="#show-number-of-usersreviews-per-year-and-for-given-country">Show number of users/reviews per year and for given country</a></li>
+<li><a href="#show-number-of-usersreviews-per-year-and-for-given-country-dep">Show number of users/reviews per year and for given country &amp; dep</a></li>
+</ul>
+</li>
+<li><a href="#national-context-1">National context</a><ul>
+<li><a href="#ingoingoutgoing-evolution-for-a-given-year">Ingoing/outgoing evolution for a given year</a></li>
+<li><a href="#info-available-for-national-request">Info available for national request</a></li>
+</ul>
+</li>
+<li><a href="#international-context-1">International context</a><ul>
+<li><a href="#number-of-reviews-per-country-for-a-given-year">Number of reviews per country for a given year</a></li>
+<li><a href="#info-available-for-international-request">Info available for international request</a></li>
+</ul>
+</li>
+<li><a href="#clustering-context-1">Clustering context</a><ul>
+<li><a href="#ingoingoutgoing-evolution-per-year">Ingoing/outgoing evolution per year</a></li>
+<li><a href="#info-available-for-clustering-request">Info available for clustering request</a></li>
+</ul>
+</li>
+</ul>
+<!-- /code_chunk_output -->
+<h2>Endpoints</h2><h3>Database statistics</h3><ul>
+<li><a href="#show-number-of-usersreviews-per-year">Show number of users/reviews per year</a> : <code>GET /:city/stats/</code></li>
+<li><a href="#show-number-of-usersreviews-per-year-and-for-given-country">... and for a given country</a> : <code>GET /:city/stats/:country</code></li>
+<li><a href="#show-number-of-usersreviews-per-year-and-for-given-country-dep">... and for a given department</a> : <code>GET /:city/stats/:country/:dep</code></li>
+</ul>
+<h3>National context</h3><ul>
+<li><a href="#ingoingoutgoing-evolution-for-a-given-year">Ingoing/outgoing evolution for a given year</a> : <code>GET /:city/national/:year</code></li>
+<li><a href="#info-available-for-national-request">Info available for national request</a> : <code>GET /:city/national/:year/info</code></li>
+</ul>
+<h3>International context</h3><ul>
+<li><a href="#number-of-reviews-per-country-for-a-given-year">Number of reviews per country for a given year</a> : <code>GET /:city/international/:year</code></li>
+<li><a href="#info-available-for-international-request">Info available for international request</a> : <code>GET /:city/internnational/:year/info</code></li>
+</ul>
+<h3>Clustering context</h3><ul>
+<li><a href="#ingoingoutgoing-evolution-per-year">Ingoing/outgoing evolution per year</a> : <code>GET /:city/clustering/:year/:name/:region</code></li>
+<li><a href="#info-available-for-clustering-request">Info available for grouping request</a> : <code>GET /:city/clustering/:year/:name/:region/info</code></li>
+</ul>
+<h1>Database statistics</h1><h2>Show number of users/reviews per year</h2><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>URL</strong></td>
+<td><code>/:city/stats/</code></td>
+</tr>
+<tr>
+<td><strong>Method</strong></td>
+<td><strong>GET</strong></td>
+</tr>
+<tr>
+<td><strong>Success Code</strong></td>
+<td>200</td>
+</tr>
+</tbody>
+</table>
+<h3>Success Response Content Example</h3><pre class="prettyprint source lang-json"><code>{
+  &quot;2010&quot;: {
+    &quot;year&quot;: 2010,
+    &quot;users&quot;: &quot;12 929&quot;,
+    &quot;reviews&quot;: &quot;42 687&quot;
+  },
+  &quot;2011&quot;: {
+    &quot;year&quot;: 2011,
+    &quot;users&quot;: &quot;24 084&quot;,
+    &quot;reviews&quot;: &quot;112 358&quot;
+  }
+  ...
+}</code></pre><h2>Show number of users/reviews per year and for given country</h2><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>URL</strong></td>
+<td><code>/:city/stats/:country</code></td>
+</tr>
+<tr>
+<td><strong>Method</strong></td>
+<td><strong>GET</strong></td>
+</tr>
+<tr>
+<td><strong>Success Code</strong></td>
+<td>200</td>
+</tr>
+<tr>
+<td><strong>URL Parameters</strong></td>
+<td>* <code>country=[string]</code> : stats of specific country.</td>
+</tr>
+</tbody>
+</table>
+<h3>Success Response Content Example</h3><pre class="prettyprint source lang-json"><code>{
+  &quot;2010&quot;: {
+    &quot;year&quot;: 2010,
+    &quot;users&quot;: &quot;12 929&quot;,
+    &quot;reviews&quot;: &quot;42 687&quot;,
+    &quot;France&quot;: &quot;6 283&quot;
+  },
+  &quot;2011&quot;: {
+    &quot;year&quot;: 2011,
+    &quot;users&quot;: &quot;24 084&quot;,
+    &quot;reviews&quot;: &quot;112 358&quot;,
+    &quot;France&quot;: &quot;20 283&quot;
+  }
+  ...
+}</code></pre><h2>Show number of users/reviews per year and for given country &amp; dep</h2><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>URL</strong></td>
+<td><code>/:city/stats/:country/:dep</code></td>
+</tr>
+<tr>
+<td><strong>Method</strong></td>
+<td><strong>GET</strong></td>
+</tr>
+<tr>
+<td><strong>Success Code</strong></td>
+<td>200</td>
+</tr>
+<tr>
+<td><strong>URL Parameters</strong></td>
+<td>* <code>country=[string]</code> : stats of specific country.</td>
+</tr>
+<tr>
+<td></td>
+<td>* <code>dep=[string]</code> : stats of specific department.</td>
+</tr>
+</tbody>
+</table>
+<h3>Success Response Content Example</h3><pre class="prettyprint source lang-json"><code>{
+  &quot;2010&quot;: {
+    &quot;year&quot;: 2010,
+    &quot;users&quot;: &quot;12 929&quot;,
+    &quot;reviews&quot;: &quot;42 687&quot;,
+    &quot;France&quot;: &quot;6 283&quot;
+  },
+  &quot;2011&quot;: {
+    &quot;year&quot;: 2011,
+    &quot;users&quot;: &quot;24 084&quot;,
+    &quot;reviews&quot;: &quot;112 358&quot;,
+    &quot;France&quot;: &quot;20 283&quot;
+  }
+  ...
+}</code></pre><h1>National context</h1><h2>Ingoing/outgoing evolution for a given year</h2><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>URL</strong></td>
+<td><code>/:city/national/:year</code></td>
+</tr>
+<tr>
+<td><strong>Method</strong></td>
+<td><strong>GET</strong></td>
+</tr>
+<tr>
+<td><strong>Success Code</strong></td>
+<td>200</td>
+</tr>
+<tr>
+<td><strong>URL Parameters</strong></td>
+<td>* <code>year=[number]</code> : evolution year.</td>
+</tr>
+<tr>
+<td></td>
+<td><code>countries=[array[string]]</code> : evolution for these countries.</td>
+</tr>
+<tr>
+<td></td>
+<td><code>regions=[array[string]]</code> : evolution for these regions.</td>
+</tr>
+<tr>
+<td></td>
+<td><code>ages=[array[string]]</code> : evolution for these age ranges.</td>
+</tr>
+<tr>
+<td></td>
+<td><code>top=[number]</code> : top parameter for neo4j query.</td>
+</tr>
+</tbody>
+</table>
+<h3>Success Response Content Example</h3><pre class="prettyprint source lang-json"><code>{ 
+  &quot;Centrality&quot;:{
+    &quot;Aquitaine&quot;:{
+      &quot;2015&quot;:{&quot;value&quot;:2.19},
+      &quot;2016&quot;:{&quot;value&quot;:2.3},
+      &quot;diff&quot;:{&quot;value&quot;:0.11},
+    },
+    ...
+  },
+  &quot;TotalReviews&quot;:{
+    &quot;Aquitaine&quot;: {
+      &quot;2013&quot;: {
+        &quot;value&quot;: 2.15
+      },
+      &quot;2014&quot;: {
+        &quot;value&quot;: 2.18
+      },
+      &quot;diff&quot;: {
+        &quot;value&quot;: 0.03
+      },
+      ...
+  },
+  &quot;Evolution&quot;: {
+    &quot;Midi-Pyrénées&quot;: {
+      &quot;2015&quot;: {
+        &quot;Ingoing&quot;: 15.83,
+        &quot;Outgoing&quot;: 16.27
+      },
+      &quot;2016&quot;: {
+        &quot;Ingoing&quot;: 16.14,
+        &quot;Outgoing&quot;: 16.51
+      },
+      &quot;diff&quot;: {
+        &quot;Ingoing&quot;: 0.31,
+        &quot;Outgoing&quot;: 0.24
+      }
+    }
+    ...
+  },
+  {
+    &quot;Monthly&quot;: {
+    &quot;Poitou-Charentes&quot;: {
+      &quot;Ingoing&quot;: {
+        &quot;months&quot;: [
+          {
+            &quot;low&quot;: 88,
+            &quot;high&quot;: 0
+          },
+          {
+            &quot;low&quot;: 116,
+            &quot;high&quot;: 0
+          }
+          ...
+      },
+      &quot;Outgoing&quot;: {...}
+    }
+  }
+}</code></pre><h2>Info available for national request</h2><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>URL</strong></td>
+<td><code>/:city/national/:year/info</code></td>
+</tr>
+<tr>
+<td><strong>Method</strong></td>
+<td><strong>GET</strong></td>
+</tr>
+<tr>
+<td><strong>Success Code</strong></td>
+<td>200</td>
+</tr>
+<tr>
+<td><strong>URL Parameters</strong></td>
+<td>* <code>year=[number]</code> : evolution year.</td>
+</tr>
+</tbody>
+</table>
+<h3>Success Response Content Example</h3><pre class="prettyprint source lang-json"><code>{
+  &quot;topRegions&quot;: [&quot;Centre&quot;, &quot;Bretagne&quot;, &quot;Limousin&quot;,...],
+  &quot;topCountries&quot;: [&quot;France&quot;, &quot;-&quot;, &quot;Belgium&quot;,...],
+  &quot;topAges&quot;: [&quot;13-17&quot;, &quot;&quot;, &quot;18-25&quot;,...]
+}</code></pre><h1>International context</h1><h2>Number of reviews per country for a given year</h2><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>URL</strong></td>
+<td><code>/:city/international/:year</code></td>
+</tr>
+<tr>
+<td><strong>Method</strong></td>
+<td><strong>GET</strong></td>
+</tr>
+<tr>
+<td><strong>Success Code</strong></td>
+<td>200</td>
+</tr>
+<tr>
+<td><strong>URL Parameters</strong></td>
+<td>* <code>year=[number]</code> : evolution year.</td>
+</tr>
+<tr>
+<td></td>
+<td><code>countries=[array[string]]</code> : evolution for these countries.</td>
+</tr>
+<tr>
+<td></td>
+<td><code>areas=[array[string]]</code> : evolution for these areas.</td>
+</tr>
+<tr>
+<td></td>
+<td><code>ages=[array[string]]</code> : evolution for these age ranges.</td>
+</tr>
+<tr>
+<td></td>
+<td><code>top=[number]</code> : top parameter for neo4j query.</td>
+</tr>
+</tbody>
+</table>
+<h3>Success Response Content Example</h3><pre class="prettyprint source lang-json"><code>{
+  &quot;TotalReviews&quot;:{
+    &quot;2012&quot;: {
+      &quot;NB1&quot;: 22597,
+      &quot;Year&quot;: 2012
+    },
+    &quot;2013&quot;: {
+      &quot;NB1&quot;: 48273,
+      &quot;Year&quot;: 2013
+    },
+    &quot;diff&quot;: {
+      &quot;NB1&quot;: 113.63
+    }
+  },
+  &quot;Evolution&quot;: {
+    &quot;France&quot;: {
+      &quot;2015&quot;: 57.84,
+      &quot;2016&quot;: 55.78,
+      &quot;diff&quot;: -2.06
+    },
+    &quot;-&quot;: {
+      &quot;2015&quot;: 31.21,
+      &quot;2016&quot;: 34.07,
+      &quot;diff&quot;: 2.86
+    },
+  },
+  &quot;Monthly&quot;: {
+    &quot;France&quot;: {
+      &quot;Reviews&quot;: {
+        &quot;months&quot;: [
+          {
+            &quot;low&quot;: 5840,
+            &quot;high&quot;: 0
+          },
+          ..
+      }
+    }
+  }
+}</code></pre><h2>Info available for international request</h2><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>URL</strong></td>
+<td><code>/:city/international/:year/info</code></td>
+</tr>
+<tr>
+<td><strong>Method</strong></td>
+<td><strong>GET</strong></td>
+</tr>
+<tr>
+<td><strong>Success Code</strong></td>
+<td>200</td>
+</tr>
+<tr>
+<td><strong>URL Parameters</strong></td>
+<td>* <code>year=[number]</code> : evolution year.</td>
+</tr>
+</tbody>
+</table>
+<h3>Success Response Content Example</h3><pre class="prettyprint source lang-json"><code>{
+  &quot;topCountries&quot;: [&quot;France&quot;, &quot;-&quot;, &quot;Belgium&quot;,...],
+  &quot;topAges&quot;: [&quot;13-17&quot;, &quot;&quot;, &quot;18-25&quot;,...]
+}</code></pre><h1>Clustering context</h1><h2>Ingoing/outgoing evolution per year</h2><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>URL</strong></td>
+<td><code>/:city/grouping/:year/:name/:region</code></td>
+</tr>
+<tr>
+<td><strong>Method</strong></td>
+<td><strong>GET</strong></td>
+</tr>
+<tr>
+<td><strong>Success Code</strong></td>
+<td>200</td>
+</tr>
+<tr>
+<td><strong>URL Parameters</strong></td>
+<td>* <code>year=[number]</code> : evolution year.</td>
+</tr>
+<tr>
+<td></td>
+<td>* <code>name=[number]</code> : name for neo4j request.</td>
+</tr>
+<tr>
+<td></td>
+<td>* <code>region=[number]</code> : evolution for this region.</td>
+</tr>
+<tr>
+<td></td>
+<td><code>countries=[array[string]]</code> : evolution for these countries.</td>
+</tr>
+<tr>
+<td></td>
+<td><code>areas=[array[string]]</code> : evolution for these areas.</td>
+</tr>
+<tr>
+<td></td>
+<td><code>ages=[array[string]]</code> : evolution for these age ranges.</td>
+</tr>
+<tr>
+<td></td>
+<td><code>top=[number]</code> : top parameter for neo4j query.</td>
+</tr>
+</tbody>
+</table>
+<h3>Success Response Content Example</h3><pre class="prettyprint source lang-json"><code>{
+  &quot;Centrality&quot;:{
+    &quot;Bordeaux&quot;: {
+      &quot;2015&quot;: {
+        &quot;value&quot;: 104.4
+      },
+      &quot;2016&quot;: {
+        &quot;value&quot;: 108.3
+      },
+      &quot;diff&quot;: {
+        &quot;value&quot;: 3.9
+      }
+    },
+    ...
+  },
+  &quot;TotalReviews&quot;:{
+    &quot;NB1&quot;:18195,
+    &quot;NB2&quot;: 18195,
+    &quot;Year&quot;: 2016
+  },
+  &quot;Evolution&quot;: {
+    &quot;Midi-Pyrénées&quot;: {
+      &quot;2015&quot;: {
+        &quot;Ingoing&quot;: 15.83,
+        &quot;Outgoing&quot;: 16.27
+      },
+      &quot;2016&quot;: {
+        &quot;Ingoing&quot;: 16.14,
+        &quot;Outgoing&quot;: 16.51
+      },
+      &quot;diff&quot;: {
+        &quot;Ingoing&quot;: 0.31,
+        &quot;Outgoing&quot;: 0.24
+      }
+    }
+    ...
+  },
+  {
+    &quot;Monthly&quot;: {
+    &quot;Poitou-Charentes&quot;: {
+      &quot;Ingoing&quot;: {
+        &quot;months&quot;: [
+          {
+            &quot;low&quot;: 88,
+            &quot;high&quot;: 0
+          },
+          {
+            &quot;low&quot;: 116,
+            &quot;high&quot;: 0
+          }
+          ...
+        ]
+      },
+      &quot;Outgoing&quot;: {...}
+    }
+  }
+}</code></pre><h2>Info available for clustering request</h2><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>URL</strong></td>
+<td><code>/:city/international/:year/info</code></td>
+</tr>
+<tr>
+<td><strong>Method</strong></td>
+<td><strong>GET</strong></td>
+</tr>
+<tr>
+<td><strong>Success Code</strong></td>
+<td>200</td>
+</tr>
+<tr>
+<td><strong>URL Parameters</strong></td>
+<td>* <code>year=[number]</code> : evolution year.</td>
+</tr>
+<tr>
+<td></td>
+<td>* <code>name=[number]</code> : name for neo4j request.</td>
+</tr>
+<tr>
+<td></td>
+<td>* <code>region=[number]</code> : evolution for this region.</td>
+</tr>
+</tbody>
+</table>
+<h3>Success Response Content Example</h3><pre class="prettyprint source lang-json"><code>{
+  &quot;topCountries&quot;: [&quot;France&quot;, &quot;-&quot;, &quot;Belgium&quot;,...],
+  &quot;topAreas&quot;: [&quot;Bordeaux&quot;,...],
+  &quot;topAges&quot;: [&quot;13-17&quot;, &quot;&quot;, &quot;18-25&quot;,...]
+}</code></pre></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon May 06 2019 14:48:17 GMT+0200 (CEST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
