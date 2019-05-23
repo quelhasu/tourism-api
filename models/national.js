@@ -6,10 +6,10 @@ const Info = require("./info");
  */
 
 /**
- * Finds ingoing and outgoing trips made between countries 
- * in France and areas in Aquitaine for a given year
+ * Finds ingoing and outgoing trips made between departments 
+ * in France and departments in Nouvelle-Aquitaine for a given year
  * 
- * @function getRegionsValuesByYear
+ * @function getDepartmentsGoingValues
  * @memberof National
  * 
  * @param {Object} sessions - Neo4j context session
@@ -19,20 +19,20 @@ const Info = require("./info");
  * 
  * @return {Object} Object with the year and percent of users found for a given year
  */
-exports.getRegionsValuesByYear = (session, params, totReviews, prevArray = null) => {
+exports.getDepartmentsGoingValues = (session, params, totReviews, prevArray = null) => {
   var regionsYear = prevArray || {};
   return session
     .run(
-      'MATCH (a0:Area{country:"France"})  -[a1:trip{year:{YEAR}}]- \
-    (a2:Area{name:"Aquitaine"}) \
-    where a0.name in {REGIONS} and a1.nat in {COUNTRIES} {AGES} \
-    RETURN a0.name as region, \
+      'MATCH (a0:Area_2{name_0:"France"})  -[a1:trip{year:{YEAR}}]- \
+    (a2:Area_2{name_1:"Nouvelle-Aquitaine"}) \
+    where a0.name in {DEPARTMENTS} and a1.nat in {COUNTRIES} {AGES} \
+    RETURN a0.name as department, \
     sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1, \
     sum(case when ((a0) <-[a1]- (a2) ) then a1.nb else 0 end) as NB2 \
     order by (NB1+NB2) desc'.replace(/{AGES}/g,params.AGES),params)
     .then(result => {
       result.records.forEach(record => {
-        region = record.get("region");
+        region = record.get("department");
         !(region in regionsYear) && (regionsYear[region] = {});
         !(params.YEAR in regionsYear[region]) && (regionsYear[region][params.YEAR] = {});
         regionsYear[region][params.YEAR]["Ingoing"] = Math.round((10000 * record.get("NB1")) / totReviews["NB1"]) / 100;
@@ -48,8 +48,8 @@ exports.getRegionsValuesByYear = (session, params, totReviews, prevArray = null)
 };
 
 /**
- * Finds the number of ingoing and outgoing trips made between countries 
- * in France and areas in Aquitaine for a given year
+ * Finds the number of ingoing and outgoing trips made between departments 
+ * in France and departments in Nouvelle-Aquitaine for a given year
  * 
  * @function getTotalByYear
  * @memberof National
@@ -61,16 +61,16 @@ exports.getRegionsValuesByYear = (session, params, totReviews, prevArray = null)
  */
 exports.getTotalByYear = (session, params) => {
   return Info.getTotByYear(session, params,
-    'MATCH (a0:Area{country:"France"}) -[a1:trip{year:{YEAR}}]- \
-    (a2:Area{name:"Aquitaine"}) \
+    'MATCH (a0:Area_2{name_0:"France"}) -[a1:trip{year:{YEAR}}]- \
+    (a2:Area_2{name_1:"Nouvelle-Aquitaine"}) \
     RETURN sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1, \
     sum(case when ((a0) <-[a1]- (a2) ) then a1.nb else 0 end) as NB2',
     [1,2]);
 };
 
 /**
- * Finds the number of ingoing and outgoing trips made between regions 
- * in France and areas in Aquitaine by month for a given year 
+ * Finds the number of ingoing and outgoing trips made between departments 
+ * in France and departments in Nouvelle-Aquitaine for a given year
  * 
  * @function getMonths
  * @memberof National
@@ -84,22 +84,22 @@ exports.getMonths = (session, params) => {
   return Info.getMonthsValues(
     session,
     params,
-    'MATCH (a0:Area{country:"France"})  -[a1:trip{year:{YEAR}}]-> \
-    (a2:Area{name:"Aquitaine"}) where a0.name in {REGIONS} \
+    'MATCH (a0:Area_2{name_0:"France"})  -[a1:trip{year:{YEAR}}]-> \
+    (a2:Area_2{name_1:"Nouvelle-Aquitaine"}) where a0.name in {DEPARTMENTS} \
     and a1.nat in {COUNTRIES} {AGES} \
-    RETURN a0.name as region, a1.month as month, sum(a1.nb) as NB \
+    RETURN a0.name as department, a1.month as month, sum(a1.nb) as NB \
     order by NB desc',
-    'Ingoing', 'region')
+    'Ingoing', 'department')
     .then(result => {
       return Info.getMonthsValues(
         session, 
         params, 
-        'MATCH (a0:Area{country:"France"})  <-[a1:trip{year:{YEAR}}]- \
-        (a2:Area{name:"Aquitaine"}) where a0.name in {REGIONS} \
+        'MATCH (a0:Area_2{name_0:"France"})  <-[a1:trip{year:{YEAR}}]- \
+        (a2:Area_2{name_1:"Nouvelle-Aquitaine"}) where a0.name in {DEPARTMENTS} \
         and a1.nat in {COUNTRIES} {AGES} \
-        RETURN a0.name as region, a1.month as month, sum(a1.nb) as NB \
+        RETURN a0.name as department, a1.month as month, sum(a1.nb) as NB \
         order by NB desc', 
-        'Outgoing','region',
+        'Outgoing','department',
         result);
     })
     .then(final => {
@@ -108,7 +108,7 @@ exports.getMonths = (session, params) => {
 };
 
 /**
- * Finds page rank score for regions in France
+ * Finds page rank score for departments in France
  * 
  * @function getRegionsPageRank
  * @memberof National
@@ -121,20 +121,20 @@ exports.getMonths = (session, params) => {
  */
 exports.getRegionsPageRank = async (session, params, array=null) => {
   paramsCopy = JSON.parse(JSON.stringify(params));
-  ['REGIONS', 'COUNTRIES'].forEach(variable => {
+  ['DEPARTMENTS', 'COUNTRIES'].forEach(variable => {
     paramsCopy[variable] = JSON.stringify(paramsCopy[variable]).replace(/'/g, "\\'")
   })
   return Info.getPageRank(
     session,
     paramsCopy,
-    `CALL algo.pageRank.stream(\'MATCH (a:Area{country:"France"}) \
-    where a.name in ${paramsCopy.REGIONS} RETURN id(a) as id\', \'\
-    MATCH (a0:Area{country:"France"})-[a1:trip{year:${paramsCopy.YEAR}}]->(a2:Area{country:"France"}) \
-    where a0.name in ${paramsCopy.REGIONS} and a1.nat in ${paramsCopy.COUNTRIES} ${paramsCopy.AGES == "" ? "" : paramsCopy.AGES.replace(/'/g, '"')} \
+    `CALL algo.pageRank.stream(\'MATCH (a:Area_2{name_0:"France"}) \
+    where a.name in ${paramsCopy.DEPARTMENTS} RETURN id(a) as id\', \'\
+    MATCH (a0:Area_2{name_0:"France"})-[a1:trip{year:${paramsCopy.YEAR}}]->(a2:Area_2{name_0:"France"}) \
+    where a0.name in ${paramsCopy.DEPARTMENTS} and a1.nat in ${paramsCopy.COUNTRIES} ${paramsCopy.AGES == "" ? "" : paramsCopy.AGES.replace(/'/g, '"')} \
     RETURN id(a0) as source, id(a2) as target, sum(toFloat(a1.nb)) as weight\', {graph:\'cypher\', \
     dampingFactor:0.85, iterations:50, write: true, weightProperty:\'weight\'} ) \
-    YIELD node, score RETURN node.name AS region,score ORDER BY score DESC;`,
-    'region',
+    YIELD node, score RETURN node.name AS department,score ORDER BY score DESC;`,
+    'department',
     array
   );
 }

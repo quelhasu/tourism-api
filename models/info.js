@@ -2,8 +2,40 @@
  * @namespace Info
  */
 
+ /**
+ * Finds all departments and its number of trips for all trip between 
+ * France and Nouvelle-Aquitaine - France for a given year 
+ * 
+ * @function getTopRegions
+ * @memberof Info
+ * 
+ * @param {Object} sessions - Neo4j context session
+ * @param {Object} params - Query's parameters
+ * 
+ * @return {String[]} Array with all regions found
+ */
+exports.getTopDepartments = (session, params) => new Promise((resolve, reject) => {
+  var topDepartments = [];
+  session
+    .run('MATCH (a1:Area_2{name_0:"France"})-[v:trip{year:{YEAR}}]-> \
+    (a2:Area_2{name_1:"Nouvelle-Aquitaine", name_0:"France"}) \
+    RETURN a1.name as department, \
+    sum(v.nb) as NB order by NB \
+    desc LIMIT {TOP}', params)
+    .then(result => {
+      result.records.forEach(record => {
+        topDepartments.push(record.get("department"));
+      });
+      resolve(topDepartments);
+    })
+    .catch(error => {
+      console.log("Erreur : " + error);
+      reject(error);
+    })
+})
 
  /**
+  * @deprecated
  * Finds all regions and its number of trips for all trip between France and 
  * Aquitaine - France for a given year 
  * 
@@ -18,7 +50,7 @@
 exports.getTopRegions = (session, params) => new Promise((resolve, reject) => {
   var topRegions = [];
   session
-    .run('MATCH (a1:Area{country:"France"})-[v:trip{year:{YEAR}}]-> \
+    .run('MATCH (a1:Area_2{country:"France"})-[v:trip{year:{YEAR}}]-> \
     (a2:Area{name:"Aquitaine", country:"France"}) \
     RETURN a1.name as region, \
     sum(v.nb) as NB order by NB \
@@ -50,7 +82,7 @@ exports.getTopRegions = (session, params) => new Promise((resolve, reject) => {
 exports.getTopAreas = (session, params) => new Promise((resolve, reject) => {
   var topRegions = [];
   session
-    .run(`MATCH (a0:AreaGironde)-[a1:trip{year:{YEAR}}]->(a2:AreaGironde) \
+    .run(`MATCH (a0:Area_4)-[a1:trip{year:{YEAR}}]->(a2:Area_4) \
     WHERE a0.${params.NAME} = {REGION} AND a2.${params.NAME} = {REGION}\
     RETURN a0.name_3 as shape, sum(a1.nb) as NB \
     order by NB desc LIMIT {TOP}`, params)
@@ -84,7 +116,7 @@ exports.getTopCountries = (session, params) => new Promise((resolve, reject) => 
   var topCountries = [];
   session 
     .run('MATCH (a1:User)-[v:review{year:{YEAR}}]->\
-    (a2:Location{region:"Aquitaine", country:"France"}) \
+    (a2:Location{name_1:"Nouvelle-Aquitaine", name_0:"France"}) \
     RETURN a1.country as country, \
     count(*) as NB order by  NB \
     desc LIMIT {TOP}', params)
