@@ -2,18 +2,18 @@
  * @namespace Info
  */
 
- /**
- * Finds all departments and its number of trips for all trip between 
- * France and Nouvelle-Aquitaine - France for a given year 
- * 
- * @function getTopRegions
- * @memberof Info
- * 
- * @param {Object} sessions - Neo4j context session
- * @param {Object} params - Query's parameters
- * 
- * @return {String[]} Array with all regions found
- */
+/**
+* Finds all departments and its number of trips for all trip between 
+* France and Nouvelle-Aquitaine - France for a given year 
+* 
+* @function getTopRegions
+* @memberof Info
+* 
+* @param {Object} sessions - Neo4j context session
+* @param {Object} params - Query's parameters
+* 
+* @return {String[]} Array with all regions found
+*/
 exports.getTopDepartments = (session, params) => new Promise((resolve, reject) => {
   var topDepartments = [];
   session
@@ -34,19 +34,19 @@ exports.getTopDepartments = (session, params) => new Promise((resolve, reject) =
     })
 })
 
- /**
-  * @deprecated
- * Finds all regions and its number of trips for all trip between France and 
- * Aquitaine - France for a given year 
- * 
- * @function getTopRegions
- * @memberof Info
- * 
- * @param {Object} sessions - Neo4j context session
- * @param {Object} params - Query's parameters
- * 
- * @return {String[]} Array with all regions found
- */
+/**
+ * @deprecated
+* Finds all regions and its number of trips for all trip between France and 
+* Aquitaine - France for a given year 
+* 
+* @function getTopRegions
+* @memberof Info
+* 
+* @param {Object} sessions - Neo4j context session
+* @param {Object} params - Query's parameters
+* 
+* @return {String[]} Array with all regions found
+*/
 exports.getTopRegions = (session, params) => new Promise((resolve, reject) => {
   var topRegions = [];
   session
@@ -67,18 +67,18 @@ exports.getTopRegions = (session, params) => new Promise((resolve, reject) => {
     })
 })
 
- /**
- * Finds all areas and its number of trips for all trip between two areas
- * for a given year and region
- * 
- * @function getTopAreas
- * @memberof Info
- * 
- * @param {Object} sessions - Neo4j context session
- * @param {Object} params - Query's parameters
- * 
- * @return {String[]} Array with all areas found
- */
+/**
+* Finds all areas and its number of trips for all trip between two areas
+* for a given year and region
+* 
+* @function getTopAreas
+* @memberof Info
+* 
+* @param {Object} sessions - Neo4j context session
+* @param {Object} params - Query's parameters
+* 
+* @return {String[]} Array with all areas found
+*/
 exports.getTopAreas = (session, params) => new Promise((resolve, reject) => {
   var topRegions = [];
   session
@@ -100,21 +100,21 @@ exports.getTopAreas = (session, params) => new Promise((resolve, reject) => {
     })
 })
 
- /**
- * Finds all countries and its number of users that reviewed a 
- * location in Aquitaine - France for a given year 
- * 
- * @function getTopCountries
- * @memberof Info
- * 
- * @param {Object} sessions - Neo4j context session
- * @param {Object} params - Query's parameters
- * 
- * @return {String[]} Array with all countries found
- */
+/**
+* Finds all countries and its number of users that reviewed a 
+* location in Aquitaine - France for a given year 
+* 
+* @function getTopCountries
+* @memberof Info
+* 
+* @param {Object} sessions - Neo4j context session
+* @param {Object} params - Query's parameters
+* 
+* @return {String[]} Array with all countries found
+*/
 exports.getTopCountries = (session, params) => new Promise((resolve, reject) => {
   var topCountries = [];
-  session 
+  session
     .run('MATCH (a1:User)-[v:review{year:{YEAR}}]->\
     (a2:Location{name_1:"Nouvelle-Aquitaine", name_0:"France"}) \
     RETURN a1.country as country, \
@@ -132,16 +132,16 @@ exports.getTopCountries = (session, params) => new Promise((resolve, reject) => 
     })
 })
 
- /**
- * Finds all age ranges available
- * 
- * @function getAgeRanges
- * @memberof Info
- * 
- * @param {Object} sessions - Neo4j context session
- * 
- * @return {String[]} Array with all age ranges found
- */
+/**
+* Finds all age ranges available
+* 
+* @function getAgeRanges
+* @memberof Info
+* 
+* @param {Object} sessions - Neo4j context session
+* 
+* @return {String[]} Array with all age ranges found
+*/
 exports.getAgeRanges = (session) => new Promise(async (resolve, reject) => {
   var topAges = [];
   session
@@ -214,24 +214,28 @@ This causes it to terminate ongoing transaction
  * @return {Object} Object with year and its number value
  */
 exports.getTotByYear = (session, params, q, nbArgs) => new Promise(async (resolve, reject) => {
-  nbTot = {}
-  session
-    .run(q, params)
-    .then(result => {
-      result.records.forEach(record => {
-        nbArgs.forEach(i => {
-          nbTot['NB'+i] = record.get("NB"+i).low;
+  try {
+    console.log(params);
+    nbTot = {}
+    session
+      .run(q, params)
+      .then(result => {
+        result.records.forEach(record => {
+          nbArgs.forEach(i => {
+            nbTot['NB' + i] = record.get("NB" + i).low;
+          })
         })
+        nbTot['Year'] = params.YEAR;
+        session.close();
+        resolve(nbTot);
       })
-      nbTot['Year'] = params.YEAR;
-      session.close();
-      resolve(nbTot);
-    })
-    .catch(err => {
-      session.close();
-      console.log("Erreur : " + err);
-      reject(err);
-    })
+      .catch(err => {
+        session.close();
+        console.log("Erreur : " + err);
+        reject(err);
+      })
+  }
+  catch (e) { throw e }
 })
 
 /**
@@ -248,7 +252,7 @@ exports.getTotByYear = (session, params, q, nbArgs) => new Promise(async (resolv
  *  
  * @return {Object} Object with each arg and its score value
  */
-exports.getPageRank = (session, params, q, arg, array=null) => new Promise(async (resolve, reject) => {
+exports.getPageRank = (session, params, q, arg, array = null) => new Promise(async (resolve, reject) => {
   object = array || {}
   session
     .run(q, params)

@@ -106,7 +106,9 @@ catch(e) {
 exports.percentDiff = (oldV, newV, nbVal = [1]) => {
   let obj = {};
   nbVal.forEach(i => {
-    obj[`NB${i}`] = (((newV[`NB${i}`]-oldV[`NB${i}`])/oldV[`NB${i}`])*100).roundDecimal(2)
+    if(obj[`NB${i}`]){
+      obj[`NB${i}`] = (((newV[`NB${i}`]-oldV[`NB${i}`])/oldV[`NB${i}`])*100).roundDecimal(2)
+    }
   })
   return obj;
 }
