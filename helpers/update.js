@@ -1,3 +1,12 @@
+exports.yearArray = (year, to) => {
+  let yearArr = [];
+  while(year >= to && year >= 2013){
+    yearArr.push(year);
+    year--;
+  }
+  return yearArr;
+}
+
 /**
  * Formats age for query process
  * @param {String} age - String to modify
@@ -66,13 +75,18 @@ exports.formatNumber = (num) => {
  */
 exports.diff = (array) => {
   try{
+  let i = 0;
   for (var country in array) {
+    i = 0;
     for (var year in array[country]) {
-      array[country]['diff'] =
-        {
-          'value': Number(array[country][eval(year) + 1]['value'] - array[country][year]['value']).roundDecimal(2)
-        }
-      break;
+      if(i==(Object.keys(array[country]).length) - 2){
+        array[country]['diff'] =
+          {
+            'value': Number(array[country][eval(year) + 1]['value'] - array[country][year]['value']).roundDecimal(2)
+          }
+        break;
+      }
+      i++
     }
   }
   return array;

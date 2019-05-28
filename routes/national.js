@@ -18,11 +18,9 @@ router.get("/:year/", async (req, res, next) => {
     AGES: Updater.ages(req.query.ages)
   };
 
-  if (['regions', 'countries'].some(q => !Object.keys(req.query).includes(q))) tops = await getNationalInfo(req);
-  params['REGIONS'] = Object.keys(req.query).includes('regions') ? req.query.regions.split(',') : tops['topRegions'];
+  if (['departments', 'countries'].some(q => !Object.keys(req.query).includes(q))) tops = await getNationalInfo(req);
+  params['DEPARTMENTS'] = Object.keys(req.query).includes('departments') ? req.query.regions.split(',') : tops['topDepartments'];
   params['COUNTRIES'] = Object.keys(req.query).includes('countries') ? req.query.countries.split(',') : tops['topCountries'];
-  // params['REGIONS'].push("Aquitaine");
-
 
 
   // Monthly evolution
@@ -33,12 +31,12 @@ router.get("/:year/", async (req, res, next) => {
 
   // Year
   const totReviews = await National.getTotalByYear(dbUtils.getSession(req), params);
-  National.getRegionsValuesByYear(dbUtils.getSession(req), params, totReviews).then(async yearArray => {
+  National.getDepartmentsGoingValues(dbUtils.getSession(req), params, totReviews).then(async yearArray => {
       // Year - 1
       const totReviewsOld = await National.getTotalByYear(dbUtils.getSession(req), { YEAR: params.YEAR - 1 });
       National.getTotalByYear(dbUtils.getSession(req), { YEAR: params.YEAR - 1 })
         params.YEAR -= 1;
-        National.getRegionsValuesByYear(dbUtils.getSession(req), params, totReviewsOld, yearArray)
+        National.getDepartmentsGoingValues(dbUtils.getSession(req), params, totReviewsOld, yearArray)
         .then(async finalArray => {
           const centralityFinalArray = await National.getRegionsPageRank(dbUtils.getSession(req), params, centralityArray);
           writeResponse(res, {
@@ -64,15 +62,15 @@ const getNationalInfo = (req) => {
   const session = dbUtils.getSession(req);
   return new Promise((resolve, reject) => {
     Promise.all([
-      Info.getTopRegions(session, params),
+      Info.getTopDepartments(session, params),
       Info.getTopCountries(session, params),
       Info.getAgeRanges(session, params),
     ])
-    .then(([topRegions, topCountries, topAges]) => {
+    .then(([topDepartments, topCountries, topAges]) => {
       session.close();
-      topRegions.push('Aquitaine');
+      topDepartments.push('Nouvelle-Aquitaine');
       resolve({
-        "topRegions": topRegions,
+        "topDepartments": topDepartments,
         "topCountries": topCountries,
         "topAges": topAges,
       })

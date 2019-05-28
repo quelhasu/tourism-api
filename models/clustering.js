@@ -55,7 +55,7 @@ exports.getDepValuesByYear = (session, params, totReviews, prevArray = null) => 
         !(shape in regionsYear) && (regionsYear[shape] = {});
         !(params.YEAR in regionsYear[shape]) && (regionsYear[shape][params.YEAR] = {});
         regionsYear[shape][params.YEAR]["Ingoing"] = Math.round((10000 * record.get("NB1")) / totReviews["NB1"]) / 100;
-        regionsYear[shape][params.YEAR]["Outgoing"] = Math.round((10000 * record.get("NB2")) / totReviews["NB1"]) / 100;
+        regionsYear[shape][params.YEAR]["Outgoing"] = Math.round((10000 * record.get("NB2")) / totReviews["NB2"]) / 100;
       });
       session.close();
       return regionsYear;

@@ -19,7 +19,7 @@ const Info = require('./info');
 exports.getTotalByYear = (session, params) => {
   return Info.getTotByYear(session, params,
     'MATCH (a1:User)-[v:review{year:{YEAR}}]->\
-    (a2:Location{region:"Aquitaine", country:"France"}) \
+    (a2:Location{gid_1:"FRA.10_1", gid_0:"FRA"}) \
     where a1.country in {COUNTRIES} {AGES} \
     RETURN count(*) as NB1'.replace(/{AGES}/g, params.AGES),
     [1]);
@@ -44,7 +44,7 @@ exports.getCountriesValuesByYear = (session, params, totReviews, prevArray = nul
   return session
     .run(
       'MATCH (a1:User)-[v:review{year:{YEAR}}]->\
-      (a2:Location{region:"Aquitaine", country:"France"}) \
+      (a2:Location{gid_1:"FRA.10_1", gid_0:"FRA"}) \
       where a1.country in {COUNTRIES} {AGES} and a2.typeR IN {TYPER} \
       RETURN a1.country as country, count(*) as NB1 \
       order by NB1 desc'.replace(/{AGES}/g, params.AGES), params)
@@ -81,7 +81,7 @@ exports.getMonths = (session, params) => {
     session,
     params,
     'MATCH (a1:User)-[v:review{year:{YEAR}}]->\
-    (a2:Location{region:"Aquitaine", country:"France"}) \
+    (a2:Location{gid_1:"FRA.10_1", gid_0:"FRA"}) \
     where a1.country in {COUNTRIES} {AGES} \
     RETURN a1.country as country, v.month as month, count(*) as NB \
     ORDER BY NB DESC',
