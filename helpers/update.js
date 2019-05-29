@@ -105,12 +105,16 @@ catch(e) {
  */
 exports.percentDiff = (oldV, newV, nbVal = [1]) => {
   let obj = {};
-  nbVal.forEach(i => {
-    if(obj[`NB${i}`]){
+  nbVal.forEach(i => {    
+    if(newV[`NB${i}`] && oldV[`NB${i}`]){
       obj[`NB${i}`] = (((newV[`NB${i}`]-oldV[`NB${i}`])/oldV[`NB${i}`])*100).roundDecimal(2)
     }
   })
   return obj;
+}
+
+exports.verifyNames = (from, groupby) => {
+  return (from >= 0 && from <= 4 && groupby >= 0 && groupby <=4 && from < groupby);
 }
 
 /**
@@ -146,4 +150,32 @@ String.prototype.capitalize = function () {
  */
 String.prototype.nameQuery = function () {
   return "name_"+this;
+};
+
+/**
+ * Formats string for process destination query
+ * 
+ * @class String
+ * @function nameQueryFrom
+ * @return {String} formated string 
+ */
+String.prototype.nameQueryFrom = function () {
+  let destination = null;
+  switch (Number(this)) {
+    case 0:
+      destination = 'France';
+      break;
+    case 1:
+      destination = 'Nouvelle-Aquitaine';
+      break;
+    case 2:
+      destination = 'Gironde';
+      break;
+    case 3:
+      destination = 'Bordeaux';
+      break;
+    default:
+      break;
+  }
+  return `name_${this}=\'${destination}\'`;
 };

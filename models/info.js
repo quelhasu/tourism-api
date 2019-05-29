@@ -2,6 +2,70 @@
  * @namespace Info
  */
 
+ /**
+* Finds all bourough and its number of trips for all trip between 
+* France and Nouvelle-Aquitaine - France for a given year 
+* 
+* @function getTopBoroughs
+* @memberof Info
+* 
+* @param {Object} sessions - Neo4j context session
+* @param {Object} params - Query's parameters
+* 
+* @return {String[]} Array with all boroughs found
+*/
+exports.getTopBoroughs = (session, params) => new Promise((resolve, reject) => {
+  var topBoroughs   = [];
+  session
+    .run('MATCH (a1:Area_3{name_0:"France"})-[v:trip{year:{YEAR}}]-> \
+    (a2:Area_3{name_2:"Gironde" ,name_1:"Nouvelle-Aquitaine", name_0:"France"}) \
+    RETURN a1.name as borough, \
+    sum(v.nb) as NB order by NB \
+    desc LIMIT {TOP}', params)
+    .then(result => {
+      result.records.forEach(record => {
+        topBoroughs.push(record.get("borough"));
+      });
+      resolve(topBoroughs);
+    })
+    .catch(error => {
+      console.log("Erreur : " + error);
+      reject(error);
+    })
+})
+
+ /**
+* Finds all districs and its number of trips for all trip between 
+* France and Nouvelle-Aquitaine - France for a given year 
+* 
+* @function getTopDistricts
+* @memberof Info
+* 
+* @param {Object} sessions - Neo4j context session
+* @param {Object} params - Query's parameters
+* 
+* @return {String[]} Array with all boroughs found
+*/
+exports.getTopDistricts = (session, params) => new Promise((resolve, reject) => {
+  var topDistricts  = [];
+  session
+    .run('MATCH (a1:Area_4{name_0:"France"})-[v:trip{year:{YEAR}}]-> \
+    (a2:Area_4{name_3:"Bordeaux", name_2:"Gironde" ,name_1:"Nouvelle-Aquitaine", name_0:"France"}) \
+    RETURN a1.name as district, \
+    sum(v.nb) as NB order by NB \
+    desc LIMIT {TOP}', params)
+    .then(result => {
+      result.records.forEach(record => {
+        topDistricts.push(record.get("district"));
+      });
+      resolve(topDistricts);
+    })
+    .catch(error => {
+      console.log("Erreur : " + error);
+      reject(error);
+    })
+})
+
 /**
 * Finds all departments and its number of trips for all trip between 
 * France and Nouvelle-Aquitaine - France for a given year 
@@ -35,7 +99,6 @@ exports.getTopDepartments = (session, params) => new Promise((resolve, reject) =
 })
 
 /**
- * @deprecated
 * Finds all regions and its number of trips for all trip between France and 
 * Aquitaine - France for a given year 
 * 
@@ -50,8 +113,8 @@ exports.getTopDepartments = (session, params) => new Promise((resolve, reject) =
 exports.getTopRegions = (session, params) => new Promise((resolve, reject) => {
   var topRegions = [];
   session
-    .run('MATCH (a1:Area_2{country:"France"})-[v:trip{year:{YEAR}}]-> \
-    (a2:Area{name:"Aquitaine", country:"France"}) \
+    .run('MATCH (a1:Area_1{country:"France"})-[v:trip{year:{YEAR}}]-> \
+    (a2:Area_1{name:"Nouvelle-Aquitaine", country:"France"}) \
     RETURN a1.name as region, \
     sum(v.nb) as NB order by NB \
     desc LIMIT {TOP}', params)
