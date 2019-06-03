@@ -1,7 +1,7 @@
 const Info = require('./info');
 
 /**
- * @namespace Clustering
+ * @namespace Destination
  */
 
  /**
@@ -9,7 +9,7 @@ const Info = require('./info');
  * between two areas for a given year
  * 
  * @function getTotalByYear
- * @memberof Clustering
+ * @memberof Destination
  * 
  * @param {Object} sessions - Neo4j context session
  * @param {Object} params - Query's parameters
@@ -18,18 +18,18 @@ const Info = require('./info');
  */
 exports.getTotalByYear = (session, params) => {
   return Info.getTotByYear(session, params,
-    `MATCH (a0:AreaGironde)-[a1:trip{year:{YEAR}}]-(a2:AreaGironde)\
-    WHERE a0.${params.NAME} = {REGION} AND a2.${params.NAME} = {REGION}\
-    RETURN sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1,\
-    sum(case when ((a0) <-[a1]- (a2) ) then a1.nb else 0 end) as NB2`,
-    [1, 2]);
+    `MATCH (a0:Area_${params.GROUPBY}) -[a1:trip{year:{YEAR}}]-  \
+    (a2:Area_${params.GROUPBY}) \
+    WHERE a0.${params.FROM} AND a2.${params.FROM} \
+    RETURN sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1`,
+    [1]);
 }
 
 /**
  * Finds ingoing and outgoing trips made between two areas for a given year
  * 
- * @function getDepValuesByYear
- * @memberof Clustering
+ * @function getGoingValues
+ * @memberof Destination
  * 
  * @param {Object} sessions - Neo4j context session
  * @param {Object} params - Query's parameters
@@ -38,24 +38,25 @@ exports.getTotalByYear = (session, params) => {
  * 
  * @return {Object} Object with the year and percent of users found for a given year
  */
-exports.getDepValuesByYear = (session, params, totReviews, prevArray = null) => {
+exports.getGoingValues = (session, params, totReviews, prevArray = null) => {
   var regionsYear = prevArray || {};
   return session
     .run(
-      'MATCH (a0:AreaGironde)  -[a1:trip{year:{YEAR}}]- (a2:AreaGironde) \
-      WHERE a0.name_3 IN {AREAS}\
-       AND a2.name_3 IN {AREAS} and a1.nat in {COUNTRIES} {AGES} \
-       RETURN a0.name_3 as shape_gid, \
+      `MATCH (a0:Area_${params.GROUPBY}) -[a1:trip{year:{YEAR}}]- (a2:Area_${params.GROUPBY}) \
+      WHERE a0.${params.FROM} AND a2.${params.FROM} \
+      AND a0.name IN {AREAS}\
+       AND a2.name IN {AREAS} and a1.nat in {COUNTRIES} {AGES} \
+       RETURN a0.name as name, \
        sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1, \
        sum(case when ((a0) <-[a1]- (a2) ) then a1.nb else 0 end) as NB2 \
-       order by (NB1+NB2) desc'.replace(/{AGES}/g, params.AGES), params)
+       order by (NB1+NB2) desc`.replace(/{AGES}/g, params.AGES), params)
     .then(result => {
       result.records.forEach(record => {
-        shape = record.get("shape_gid");
+        shape = record.get("name");
         !(shape in regionsYear) && (regionsYear[shape] = {});
         !(params.YEAR in regionsYear[shape]) && (regionsYear[shape][params.YEAR] = {});
         regionsYear[shape][params.YEAR]["Ingoing"] = Math.round((10000 * record.get("NB1")) / totReviews["NB1"]) / 100;
-        regionsYear[shape][params.YEAR]["Outgoing"] = Math.round((10000 * record.get("NB2")) / totReviews["NB2"]) / 100;
+        regionsYear[shape][params.YEAR]["Outgoing"] = Math.round((10000 * record.get("NB2")) / totReviews["NB1"]) / 100;
       });
       session.close();
       return regionsYear;
@@ -71,7 +72,7 @@ exports.getDepValuesByYear = (session, params, totReviews, prevArray = null) => 
  * by month for a given year 
  * 
  * @function getMonths
- * @memberof Clustering
+ * @memberof Destination
  * 
  * @param {Object} sessions - Neo4j context session
  * @param {Object} params - Query's parameters
@@ -82,19 +83,23 @@ exports.getMonths = (session, params) => {
   return Info.getMonthsValues(
     session,
     params,
-    'MATCH (a0:AreaGironde)  -[a1:trip{year:{YEAR}}]-> (a2:AreaGironde) \
-    WHERE a0.name_3 in {AREAS} and a1.nat in {COUNTRIES} {AGES} \
-    RETURN a0.name_3 as name, a1.month as month, sum(a1.nb) as NB \
-    order by NB desc',
+    `MATCH (a0:Area_${params.GROUPBY}) -[a1:trip{year:{YEAR}}]- (a2:Area_${params.GROUPBY}) \
+    WHERE a0.${params.FROM} AND a2.${params.FROM} \
+    AND a0.name IN {AREAS}\
+     AND a2.name IN {AREAS} and a1.nat in {COUNTRIES} {AGES} \
+    RETURN a0.name as name, a1.month as month, sum(a1.nb) as NB \
+    order by NB desc`,
     'Ingoing', 'name')
     .then(result => {
       return Info.getMonthsValues(
         session,
         params,
-        'MATCH (a0:AreaGironde)  <-[a1:trip{year:{YEAR}}]- (a2:AreaGironde) \
-        WHERE a0.name_3 in {AREAS} and a1.nat in {COUNTRIES} {AGES} \
-        RETURN a0.name_3 as name, a1.month as month, sum(a1.nb) as NB \
-        order by NB desc',
+        `MATCH (a0:Area_${params.GROUPBY}) -[a1:trip{year:{YEAR}}]- (a2:Area_${params.GROUPBY}) \
+        WHERE a0.${params.FROM} AND a2.${params.FROM} \
+        AND a0.name IN {AREAS}\
+         AND a2.name IN {AREAS} and a1.nat in {COUNTRIES} {AGES} \
+        RETURN a0.name as name, a1.month as month, sum(a1.nb) as NB \
+        order by NB desc`,
         'Outgoing', 'name',
         result);
     })
@@ -111,7 +116,7 @@ exports.getMonths = (session, params) => {
  * Finds page rank score for areas in France
  * 
  * @function getAreasPageRank
- * @memberof Clustering
+ * @memberof Destination
  * 
  * @param {Object} sessions - Neo4j context session
  * @param {Object} params - Query's parameters

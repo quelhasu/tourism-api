@@ -1,4 +1,5 @@
 var sw = require("swagger-node-express");
+var _ = require('lodash');
 
 exports.writeResponse = function writeResponse(res, response, status) {
   sw.setHeaders(res);

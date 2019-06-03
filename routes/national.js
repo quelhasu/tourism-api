@@ -15,14 +15,11 @@ router.get("/:year/", async (req, res, next) => {
   params = {
     YEAR: Number(req.params.year),
     TOP: Number(req.query.limit) || 10,
-    AGES: Updater.ages(req.query.ages)
+    AGES: Updater.ages(req.query.ages),
+    COUNTRIES: Object.keys(req.query).includes('departments') ? req.query.countries.split(',') : 'France',
+    DEPARTMENTS: Object.keys(req.query).includes('countries') ? req.query.departments.split(',') : 'Gironde'
   };
-
-  if (['departments', 'countries'].some(q => !Object.keys(req.query).includes(q))) tops = await getNationalInfo(req);
-  params['DEPARTMENTS'] = Object.keys(req.query).includes('departments') ? req.query.regions.split(',') : tops['topDepartments'];
-  params['COUNTRIES'] = Object.keys(req.query).includes('countries') ? req.query.countries.split(',') : tops['topCountries'];
-
-
+  
   // Monthly evolution
   const monthly = await National.getMonths(dbUtils.getSession(req), params);
 
