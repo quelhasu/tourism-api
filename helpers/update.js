@@ -1,6 +1,6 @@
 exports.yearArray = (year, to) => {
   let yearArr = [];
-  while(year >= to && year >= 2013){
+  while (year >= to && year >= 2013) {
     yearArr.push(year);
     year--;
   }
@@ -14,10 +14,10 @@ exports.yearArray = (year, to) => {
  * @return {String} formated string 
  */
 exports.ages = (age) => {
-  if(age == "all" || age == null || age == "-")
+  if (age == "all" || age == null || age == "-")
     return "";
   else
-    return " and a1.age = '"+age+"'"
+    return " and a1.age = '" + age + "'"
 };
 
 /**
@@ -27,7 +27,7 @@ exports.ages = (age) => {
  * @return {String} formated string 
  */
 exports.region = (region) => {
-  return ' a0.name_1 = \''+region+'\' AND a2.name_1 = \''+region+'\' '
+  return ' a0.name_1 = \'' + region + '\' AND a2.name_1 = \'' + region + '\' '
 };
 
 /**
@@ -37,21 +37,26 @@ exports.region = (region) => {
  * @return {String} formated string 
  */
 exports.diffGoing = (array) => {
-  try{
+  try {
+    let i = 0;
     for (var region in array) {
+      i = 0;
       for (var year in array[region]) {
-        ingoing = Number(array[region][eval(year) + 1]['Ingoing'] - array[region][year]['Ingoing']);
-        outgoing = Number(array[region][eval(year) + 1]['Outgoing'] - array[region][year]['Outgoing']);
-        array[region]['diff'] = {
-          'Ingoing': ingoing.roundDecimal(2),
-          'Outgoing': outgoing.roundDecimal(2)
+        if (i == (Object.keys(array[region]).length) - 2) {
+          ingoing = Number(array[region][eval(year) + 1]['Ingoing'] - array[region][year]['Ingoing']);
+          outgoing = Number(array[region][eval(year) + 1]['Outgoing'] - array[region][year]['Outgoing']);
+          array[region]['diff'] = {
+            'Ingoing': ingoing.roundDecimal(2),
+            'Outgoing': outgoing.roundDecimal(2)
+          }
+          break;
         }
-        break;
+        i++;
       }
     }
     return array;
   }
-  catch(e) {
+  catch (e) {
     console.log("ERR on diff:" + e);
     return null;
   }
@@ -74,27 +79,27 @@ exports.formatNumber = (num) => {
  * @return {String} formated string 
  */
 exports.diff = (array) => {
-  try{
-  let i = 0;
-  for (var country in array) {
-    i = 0;
-    for (var year in array[country]) {
-      if(i==(Object.keys(array[country]).length) - 2){
-        array[country]['diff'] =
-          {
-            'value': Number(array[country][eval(year) + 1]['value'] - array[country][year]['value']).roundDecimal(2)
-          }
-        break;
+  try {
+    let i = 0;
+    for (var country in array) {
+      i = 0;
+      for (var year in array[country]) {
+        if (i == (Object.keys(array[country]).length) - 2) {
+          array[country]['diff'] =
+            {
+              'value': Number(array[country][eval(year) + 1]['value'] - array[country][year]['value']).roundDecimal(2)
+            }
+          break;
+        }
+        i++
       }
-      i++
     }
+    return array;
   }
-  return array;
-}
-catch(e) {
-  console.log("ERR on diff:" + e);
-  return null;
-}
+  catch (e) {
+    console.log("ERR on diff:" + e);
+    return null;
+  }
 }
 
 /**
@@ -105,16 +110,16 @@ catch(e) {
  */
 exports.percentDiff = (oldV, newV, nbVal = [1]) => {
   let obj = {};
-  nbVal.forEach(i => {    
-    if(newV[`NB${i}`] && oldV[`NB${i}`]){
-      obj[`NB${i}`] = (((newV[`NB${i}`]-oldV[`NB${i}`])/oldV[`NB${i}`])*100).roundDecimal(2)
+  nbVal.forEach(i => {
+    if (newV[`NB${i}`] && oldV[`NB${i}`]) {
+      obj[`NB${i}`] = (((newV[`NB${i}`] - oldV[`NB${i}`]) / oldV[`NB${i}`]) * 100).roundDecimal(2)
     }
   })
   return obj;
 }
 
 exports.verifyNames = (from, groupby) => {
-  return (from >= 0 && from <= 4 && groupby >= 0 && groupby <=4 && from < groupby);
+  return (from >= 0 && from <= 4 && groupby >= 0 && groupby <= 4 && from < groupby);
 }
 
 /**
@@ -127,7 +132,7 @@ exports.verifyNames = (from, groupby) => {
  */
 Number.prototype.roundDecimal = function (nbDec) {
   // +(val) => string converted to a Number
-  return +(Math.round(this + "e+" + nbDec)  + "e-" + nbDec);
+  return +(Math.round(this + "e+" + nbDec) + "e-" + nbDec);
 };
 
 /**
@@ -149,7 +154,7 @@ String.prototype.capitalize = function () {
  * @return {String} formated string 
  */
 String.prototype.nameQuery = function () {
-  return "name_"+this;
+  return "name_" + this;
 };
 
 /**

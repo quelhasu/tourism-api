@@ -69,7 +69,6 @@ router.get("/:year/:from/:groupby", async (req, res, next) => {
       totalValuesArr[year] = totalValues;
 
       evolution = await Destination.getGoingValues(dbUtils.getSession(req), params, totalValues, prevArray);
-      console.log(evolution);
       prevArray = await Object.assign({}, evolution);
     }
 
@@ -80,7 +79,7 @@ router.get("/:year/:from/:groupby", async (req, res, next) => {
     // Write response
     writeResponse(res, {
       'TotalReviews': totalValuesArr,
-      'Evolution': evolution,
+      'Evolution': Updater.diffGoing(evolution),
       'Monthly': monthly,
       "TopInfo": {
         "topCountries": topCountries,
