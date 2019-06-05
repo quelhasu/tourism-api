@@ -7,21 +7,34 @@
 
 <!-- code_chunk_output -->
 
-* [Tourism API](#tourism-api)
-	* [Endpoints](#endpoints)
-* [Database statistics](#database-statistics-1)
-	* [Show number of users/reviews per year](#show-number-of-usersreviews-per-year)
-	* [Show number of users/reviews per year and for given country](#show-number-of-usersreviews-per-year-and-for-given-country)
-	* [Show number of users/reviews per year and for given country & dep](#show-number-of-usersreviews-per-year-and-for-given-country-dep)
-* [National context](#national-context-1)
-	* [Ingoing/outgoing evolution for a given year](#ingoingoutgoing-evolution-for-a-given-year)
-	* [Info available for national request](#info-available-for-national-request)
-* [International context](#international-context-1)
-	* [Number of reviews per country for a given year](#number-of-reviews-per-country-for-a-given-year)
-	* [Info available for international request](#info-available-for-international-request)
-* [Clustering context](#clustering-context-1)
-	* [Ingoing/outgoing evolution per year](#ingoingoutgoing-evolution-per-year)
-	* [Info available for clustering request](#info-available-for-clustering-request)
+- [Tourism API](#tourism-api)
+  - [Endpoints](#endpoints)
+    - [Database statistics](#database-statistics)
+    - [National context](#national-context)
+    - [International context](#international-context)
+    - [Destination context](#destination-context)
+- [Database statistics](#database-statistics-1)
+  - [Show number of users/reviews per year](#show-number-of-usersreviews-per-year)
+    - [Success Response Content Example](#success-response-content-example)
+  - [Show number of users/reviews per year and for given country](#show-number-of-usersreviews-per-year-and-for-given-country)
+    - [Success Response Content Example](#success-response-content-example-1)
+  - [Show number of users/reviews per year and for given country & dep](#show-number-of-usersreviews-per-year-and-for-given-country--dep)
+    - [Success Response Content Example](#success-response-content-example-2)
+- [National context](#national-context-1)
+  - [Ingoing/Outgoing evolution information per year](#ingoingoutgoing-evolution-information-per-year)
+    - [Success Response Content Example](#success-response-content-example-3)
+  - [Info available for national request](#info-available-for-national-request)
+    - [Success Response Content Example](#success-response-content-example-4)
+- [International context](#international-context-1)
+  - [Reviews evolution information per year](#reviews-evolution-information-per-year)
+    - [Success Response Content Example](#success-response-content-example-5)
+  - [Info available for international request](#info-available-for-international-request)
+    - [Success Response Content Example](#success-response-content-example-6)
+- [Destination context](#destination-context-1)
+  - [Ingoing/Outgoing evolution information per year](#ingoingoutgoing-evolution-information-per-year-1)
+    - [Success Response Content Example](#success-response-content-example-7)
+  - [Info available for destination request](#info-available-for-destination-request)
+    - [Success Response Content Example](#success-response-content-example-8)
 
 <!-- /code_chunk_output -->
 
@@ -35,18 +48,18 @@
 
 ### National context
 
-- [Ingoing/outgoing evolution for a given year](#ingoingoutgoing-evolution-for-a-given-year) : `GET /:city/national/:year`
+- [Ingoing/Outgoing evolution information per year](#reviews-evolution-information-per-year) : `GET /:city/national/:year`
 - [Info available for national request](#info-available-for-national-request) : `GET /:city/national/:year/info`
 
 ### International context
 
-- [Number of reviews per country for a given year](#number-of-reviews-per-country-for-a-given-year) : `GET /:city/international/:year`
+- [Reviews evolution information per year](#number-of-reviews-per-country-for-a-given-year) : `GET /:city/international/:year`
 - [Info available for international request](#info-available-for-international-request) : `GET /:city/internnational/:year/info`
 
-### Clustering context
+### Destination context
 
-- [Ingoing/outgoing evolution per year](#ingoingoutgoing-evolution-per-year) : `GET /:city/clustering/:year/:name/:region`
-- [Info available for grouping request](#info-available-for-clustering-request) : `GET /:city/clustering/:year/:name/:region/info`
+- [Ingoing/Outgoing evolution information per year](#ingoingoutgoing-evolution-information-per-year-1) : `GET /:city/destination/:year/:from/:groupby`
+- [Info available for grouping request](#info-available-for-destination-request) : `GET /:city/destination/:year/:from/:groupby/info`
 
 # Database statistics
 
@@ -56,7 +69,7 @@
 | ---------------- | --------------- |
 | **URL**          | `/:city/stats/` |
 | **Method**       | **GET**         |
-| **Success Code** |  200            |
+| **Success Code** | 200             |
 
 ### Success Response Content Example
 
@@ -82,7 +95,7 @@
 | ------------------ | -------------------------------------------------- |
 | **URL**            | `/:city/stats/:country`                            |
 | **Method**         | **GET**                                            |
-| **Success Code**   |  200                                               |
+| **Success Code**   | 200                                                |
 | **URL Parameters** | \* `country=[string]` : stats of specific country. |
 
 ### Success Response Content Example
@@ -111,7 +124,7 @@
 | ------------------ | -------------------------------------------------- |
 | **URL**            | `/:city/stats/:country/:dep`                       |
 | **Method**         | **GET**                                            |
-| **Success Code**   |  200                                               |
+| **Success Code**   | 200                                                |
 | **URL Parameters** | \* `country=[string]` : stats of specific country. |
 |                    | \* `dep=[string]` : stats of specific department.  |
 
@@ -137,77 +150,81 @@
 
 # National context
 
-## Ingoing/outgoing evolution for a given year
+## Ingoing/Outgoing evolution information per year
 
-|                    |                                                              |
-| ------------------ | ------------------------------------------------------------ |
-| **URL**            | `/:city/national/:year`                                      |
-| **Method**         | **GET**                                                      |
-| **Success Code**   |  200                                                         |
-| **URL Parameters** | \* `year=[number]` : evolution year.                         |
-|                    | `countries=[array[string]]` : evolution for these countries. |
-|                    | `regions=[array[string]]` : evolution for these regions.     |
-|                    | `ages=[array[string]]` : evolution for these age ranges.     |
-|                    | `top=[number]` : top parameter for neo4j query.              |
+|                    |                                                                       |
+| ------------------ | --------------------------------------------------------------------- |
+| **URL**            | `/:city/national/:year`                                               |
+| **Method**         | **GET**                                                               |
+| **Success Code**   | 200                                                                   |
+| **URL Parameters** | \* `year=[number]` : evolution year.                                  |
+|                    | `countries=[array[string]]` : evolution for these user nationalities. |
+|                    | `departments=[array[string]]` : evolution for these departments.      |
+|                    | `ages=[array[string]]` : evolution for these user age ranges.         |
+|                    | `top=[number]` : top parameter for neo4j query.                       |
 
 ### Success Response Content Example
 
 ```json
 { 
   "Centrality":{
-    "Aquitaine":{
-      "2015":{"value":2.19},
-      "2016":{"value":2.3},
-      "diff":{"value":0.11},
+    "Gironde": {
+      "2017": {
+          "value": 2.08
+      },
+      "2018": {
+          "value": 2.09
+      },
+      "diff": {
+          "value": 0.01
+      }
     },
     ...
   },
   "TotalReviews":{
-    "Aquitaine": {
-      "2013": {
-        "value": 2.15
-      },
-      "2014": {
-        "value": 2.18
-      },
-      "diff": {
-        "value": 0.03
-      },
+    "2017": {
+      "NB1": 63948,
+      "NB2": 62352,
+      "Year": 2017
+    },
+    "2018": {
+      "NB1": 47626,
+      "NB2": 47958,
+      "Year": 2018
+    },
+    "diff": ...
       ...
   },
   "Evolution": {
-    "Midi-Pyrénées": {
-      "2015": {
-        "Ingoing": 15.83,
-        "Outgoing": 16.27
+    "Gironde": {
+      "2017": {
+          "Ingoing": 9.41,
+          "Outgoing": 10.42
       },
-      "2016": {
-        "Ingoing": 16.14,
-        "Outgoing": 16.51
+      "2018": {
+          "Ingoing": 10.52,
+          "Outgoing": 9.82
       },
       "diff": {
-        "Ingoing": 0.31,
-        "Outgoing": 0.24
+          "Ingoing": 1.11,
+          "Outgoing": -0.6
       }
-    }
+    },
     ...
   },
   {
     "Monthly": {
-    "Poitou-Charentes": {
-      "Ingoing": {
-        "months": [
-          {
-            "low": 88,
-            "high": 0
-          },
-          {
-            "low": 116,
-            "high": 0
-          }
-          ...
+      "Gironde": {
+        "Ingoing": {
+          "months": [
+            {
+              "low": 156,
+              "high": 0
+            },
+          ]
+        },
+        "Outgoing":...
       },
-      "Outgoing": {...}
     }
   }
 }
@@ -219,7 +236,7 @@
 | ------------------ | ------------------------------------ |
 | **URL**            | `/:city/national/:year/info`         |
 | **Method**         | **GET**                              |
-| **Success Code**   |  200                                 |
+| **Success Code**   | 200                                  |
 | **URL Parameters** | \* `year=[number]` : evolution year. |
 
 ### Success Response Content Example
@@ -234,18 +251,18 @@
 
 # International context
 
-## Number of reviews per country for a given year
+## Reviews evolution information per year
 
-|                    |                                                              |
-| ------------------ | ------------------------------------------------------------ |
-| **URL**            | `/:city/international/:year`                                 |
-| **Method**         | **GET**                                                      |
-| **Success Code**   |  200                                                         |
-| **URL Parameters** | \* `year=[number]` : evolution year.                         |
-|                    | `countries=[array[string]]` : evolution for these countries. |
-|                    | `areas=[array[string]]` : evolution for these areas.         |
-|                    | `ages=[array[string]]` : evolution for these age ranges.     |
-|                    | `top=[number]` : top parameter for neo4j query.              |
+|                    |                                                                      |
+| ------------------ | -------------------------------------------------------------------- |
+| **URL**            | `/:city/international/:year`                                         |
+| **Method**         | **GET**                                                              |
+| **Success Code**   | 200                                                                  |
+| **URL Parameters** | \* `year=[number]` : evolution year.                                 |
+|                    | `countries=[array[string]]` :evolution for these user nationalities. |
+|                    | `areas=[array[string]]` : evolution for these areas.                 |
+|                    | `ages=[array[string]]` : evolution for these user age ranges.        |
+|                    | `top=[number]` : top parameter for neo4j query.                      |
 
 ### Success Response Content Example
 
@@ -285,6 +302,7 @@
             "high": 0
           },
           ..
+        ]
       }
     }
   }
@@ -297,7 +315,7 @@
 | ------------------ | ------------------------------------ |
 | **URL**            | `/:city/international/:year/info`    |
 | **Method**         | **GET**                              |
-| **Success Code**   |  200                                 |
+| **Success Code**   | 200                                  |
 | **URL Parameters** | \* `year=[number]` : evolution year. |
 
 ### Success Response Content Example
@@ -309,22 +327,22 @@
 }
 ```
 
-# Clustering context
+# Destination context
 
-## Ingoing/outgoing evolution per year
+## Ingoing/Outgoing evolution information per year
 
-|                    |                                                              |
-| ------------------ | ------------------------------------------------------------ |
-| **URL**            | `/:city/grouping/:year/:name/:region`                        |
-| **Method**         | **GET**                                                      |
-| **Success Code**   |  200                                                         |
-| **URL Parameters** | \* `year=[number]` : evolution year.                         |
-|                    | \* `name=[number]` : name for neo4j request.                 |
-|                    | \* `region=[number]` : evolution for this region.            |
-|                    | `countries=[array[string]]` : evolution for these countries. |
-|                    | `areas=[array[string]]` : evolution for these areas.         |
-|                    | `ages=[array[string]]` : evolution for these age ranges.     |
-|                    | `top=[number]` : top parameter for neo4j query.              |
+|                    |                                                                        |
+| ------------------ | ---------------------------------------------------------------------- |
+| **URL**            | `/:city/destination/:year/:from/:groupby`                              |
+| **Method**         | **GET**                                                                |
+| **Success Code**   | 200                                                                    |
+| **URL Parameters** | \* `year=[number]` : evolution year.                                   |
+|                    | \* `from=[number]` : perimeter for neo4j query.                        |
+|                    | \* `groupby=[number]` : for this perimeter, groupby regions, dep, etc. |
+|                    | `countries=[array[string]]` : evolution for these user nationalities.  |
+|                    | `areas=[array[string]]` : evolution for these areas.                   |
+|                    | `ages=[array[string]]` : evolution for these user age ranges.          |
+|                    | `top=[number]` : top parameter for neo4j limit aggregate.              |
 
 ### Success Response Content Example
 
@@ -332,72 +350,86 @@
 {
   "Centrality":{
     "Bordeaux": {
-      "2015": {
-        "value": 104.4
-      },
       "2016": {
-        "value": 108.3
+        "value": 2.43
+      },
+      "2017": {
+        "value": 2.54
+      },
+      "2018": {
+        "value": 2.51
       },
       "diff": {
-        "value": 3.9
+        "value": -0.03
+      }
+  },
+    ...
+  },
+  "TotalReviews":{
+    "2016": {
+      "NB1": 4906,
+      "Year": 2016
+    },
+    "2017": {
+      "NB1": 3960,
+      "Year": 2017
+    },
+    "2018": {
+      "NB1": 3031,
+      "Year": 2018
+    },
+    "diff": {
+      "NB1": -23.46
+    }
+  },
+  "Evolution": {
+    "Bordeaux": {
+      "2016": {
+        "Ingoing": 17.24,
+        "Outgoing": 17.47
+      },
+      "2017": {
+        "Ingoing": 13.38,
+        "Outgoing": 24.42
+      },
+      "2018": {
+        "Ingoing": 10.89,
+        "Outgoing": 25.4
+      },
+      "diff": {
+        "Ingoing": -2.49,
+        "Outgoing": 0.98
       }
     },
     ...
   },
-  "TotalReviews":{
-    "NB1":18195,
-    "NB2": 18195,
-    "Year": 2016
-  },
-  "Evolution": {
-    "Midi-Pyrénées": {
-      "2015": {
-        "Ingoing": 15.83,
-        "Outgoing": 16.27
-      },
-      "2016": {
-        "Ingoing": 16.14,
-        "Outgoing": 16.51
-      },
-      "diff": {
-        "Ingoing": 0.31,
-        "Outgoing": 0.24
-      }
-    }
-    ...
-  },
   {
     "Monthly": {
-    "Poitou-Charentes": {
-      "Ingoing": {
-        "months": [
-          {
-            "low": 88,
-            "high": 0
-          },
-          {
-            "low": 116,
-            "high": 0
-          }
-          ...
-        ]
-      },
-      "Outgoing": {...}
-    }
+     "Bordeaux": {
+        "Ingoing": {
+          "months": [
+            {
+              "low": 93,
+              "high": 0
+            },
+          ]
+        },
+        "Outgoing":...
+     }
   }
 }
 ```
 
-## Info available for clustering request
+## Info available for destination request
 
-|                    |                                                     |
-| ------------------ | --------------------------------------------------- |
-| **URL**            | `/:city/international/:year/info`                   |
-| **Method**         | **GET**                                             |
-| **Success Code**   |  200                                                |
-| **URL Parameters** | \* `year=[number]` : evolution year.                |
-|                    | \* `name=[number]` : name for neo4j request.        |
-|                    | \* `region=[number]` : evolution for this region.   |
+|                    |                                                                        |
+| ------------------ | ---------------------------------------------------------------------- |
+| **URL**            | `/:city/destination/:year/:from/:groupby/info`                         |
+| **Method**         | **GET**                                                                |
+| **Success Code**   | 200                                                                    |
+| **URL Parameters** | \* `year=[number]` : evolution year.                                   |
+|                    | \* `from=[number]` : perimeter for neo4j query.                        |
+|                    | \* `groupby=[number]` : for this perimeter, groupby regions, dep, etc. |
 
 ### Success Response Content Example
 
