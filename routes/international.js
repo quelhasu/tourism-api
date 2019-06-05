@@ -23,9 +23,14 @@ router.get("/:year/", async (req, res, next) => {
       YEAR: Number(req.params.year),
       TOP: Number(req.query.limit) || 10,
       AGES: Updater.ages(req.query.ages),
-      COUNTRIES: req.query.countries ? req.query.countries.split(',') : 'France',
-      TYPER: req.query.typer ? req.query.typer.split(',') : ['R', 'A', 'H'] 
+      TYPER: req.query.typer ? req.query.typer.split(',') : ['R', 'A', 'H']
     };
+
+    // Get top information
+    const topAges = await Info.getAgeRanges(dbUtils.getSession(req));
+    const topCountries = await Info.getTopCountries(dbUtils.getSession(req), params);
+
+    params.COUNTRIES = req.query.countries ? req.query.countries.split(',') : topCountries;
 
     const monthly = await International.getMonths(dbUtils.getSession(req), params);
 
@@ -39,7 +44,7 @@ router.get("/:year/", async (req, res, next) => {
       params['YEAR'] = year;
       reviews = await International.getTotalByYear(dbUtils.getSession(req), params);
       reviewsArr[year] = reviews;
-      
+
       evolution = await International.getCountriesValuesByYear(dbUtils.getSession(req), params, reviews, prevArray);
       prevArray = await Object.assign({}, evolution);
     }
@@ -51,7 +56,11 @@ router.get("/:year/", async (req, res, next) => {
     writeResponse(res, {
       "TotalReviews": reviewsArr,
       "Evolution": Updater.diff(evolution),
-      "Monthly": monthly
+      "Monthly": monthly,
+      "TopInfo": {
+        "topCountries": topCountries,
+        "topAges": topAges
+      }
     });
   }
   catch (e) {
