@@ -119,7 +119,7 @@ exports.getMonths = (session, params) => {
 
  * @return {Object} Object with each year and its value page rank
  */
-exports.getRegionsPageRank = async (session, params, array=null) => {
+exports.getDepartmentsPageRank = async (session, params, array=null) => {
   paramsCopy = JSON.parse(JSON.stringify(params));
   ['DEPARTMENTS', 'COUNTRIES'].forEach(variable => {
     paramsCopy[variable] = JSON.stringify(paramsCopy[variable]).replace(/'/g, "\\'")

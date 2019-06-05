@@ -66,7 +66,6 @@ router.get("/:year/:from/:groupby", async (req, res, next) => {
 
     // Year array [selectedYear...selectedYear-3]
     yearArr = Updater.yearArray(params['YEAR'], params['YEAR'] - 2);
-    console.log(yearArr);
     // All evolution over the years
     for (const year of yearArr) {
       params['YEAR'] = year;

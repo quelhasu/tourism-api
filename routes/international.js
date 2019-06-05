@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router({ mergeParams: true });
 var writeResponse = require('../helpers/response').writeResponse
+var writeError = require('../helpers/response').writeError
 var Updater = require('../helpers/update');
 var dbUtils = require('../neo4j/dbUtils');
 var Info = require("../models/info");
@@ -52,26 +53,11 @@ router.get("/:year/", async (req, res, next) => {
       "Evolution": Updater.diff(evolution),
       "Monthly": monthly
     });
-    // // Monthly evolution
-    // const monthly = await International.getMonths(dbUtils.getSession(req), params);
-
-    // // YEAR
-    // const totReviews = await International.getTotalByYear(dbUtils.getSession(req), params);
-    // International.getCountriesValuesByYear(dbUtils.getSession(req), params, totReviews).then(async values => {
-    //   // YEAR - 1
-    //   params['YEAR'] = params.YEAR - 1;
-    //   const oldTotReviews = await International.getTotalByYear(dbUtils.getSession(req), params);
-    //   International.getCountriesValuesByYear(dbUtils.getSession(req), params, oldTotReviews, values).then(finalArray => {
-    //     writeResponse(res, {
-    //       "TotalReviews": {[params.YEAR +1]: totReviews, [params.YEAR]: oldTotReviews, diff: Updater.percentDiff(oldTotReviews, totReviews)},
-    //       "Evolution": Updater.diff(finalArray),
-    //       "Monthly": monthly
-    //     });
-    //   })
-    // })
   }
   catch (e) {
-    throw (e);
+    writeError(res, {
+      "API Error": e.message
+    })
   }
 });
 
