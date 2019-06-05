@@ -132,13 +132,15 @@ exports.getAreasPageRank = async (session, params, array=null) => {
   return Info.getPageRank(
     session,
     paramsCopy,
-    `CALL algo.pageRank.stream(\'MATCH (a:AreaGironde) \
-    where a.${paramsCopy.NAME} = \\\'${paramsCopy.REGION}\\\' RETURN  id(a) as id\', \'\
-    MATCH (a0:AreaGironde)-[a1:trip{year:${paramsCopy.YEAR}}]->(a2:AreaGironde) \
-    where a0.name_3 in ${paramsCopy.AREAS} and a2.name_3 in ${paramsCopy.AREAS} and a1.nat in ${paramsCopy.COUNTRIES} ${paramsCopy.AGES == "" ? "" : paramsCopy.AGES.replace(/'/g, '"')} \
+    `CALL algo.pageRank.stream(\'MATCH (a:Area_${params.GROUPBY}) \
+    where a.${params.FROM.replace(/'/g, '"')} and a.name in ${paramsCopy.AREAS} RETURN  id(a) as id\', \'\
+    MATCH (a0:Area_${params.GROUPBY})-[a1:trip{year:${paramsCopy.YEAR}}]->(a2:Area_${params.GROUPBY}) \
+    where a0.name in ${paramsCopy.AREAS} and a2.name in ${paramsCopy.AREAS} \
+    and a0.${params.FROM.replace(/'/g, '"')} and a2.${params.FROM.replace(/'/g, '"')} \
+    and a1.nat in ${paramsCopy.COUNTRIES} ${paramsCopy.AGES == "" ? "" : paramsCopy.AGES.replace(/'/g, '"')} \
     RETURN id(a0) as source, id(a2) as target, sum(toFloat(a1.nb)) as weight\', {graph:\'cypher\', \
     dampingFactor:0.85, iterations:50, write: true, weightProperty:\'weight\'} ) \
-    YIELD node, score RETURN node.name_3 AS shape_gid, sum(score) as score ORDER BY score DESC LIMIT 10;`,
+    YIELD node, score RETURN node.name AS shape_gid, sum(score) as score ORDER BY score DESC LIMIT 10;`,
     'shape_gid',
     array
   );

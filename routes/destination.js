@@ -17,9 +17,11 @@ router.get("/:year/:from/:groupby", async (req, res, next) => {
   if (Updater.verifyNames(req.params.from, req.params.groupby)) {
     let yearArr = [];
     let evolution = {};
+    let centrality = {};
     let totalValuesArr = {};
     let totalValues = null;
     let prevArray = null;
+    let prevArrayCentral = null;
 
     // Parameters definition
     params = {
@@ -28,31 +30,34 @@ router.get("/:year/:from/:groupby", async (req, res, next) => {
       YEAR: Number(req.params.year),
       TOP: Number(req.query.limit) || 12,
       AGES: Updater.ages(req.query.ages),
-      COUNTRIES: 'France',
     };
-    
 
     // Get top information for groupby
     const topAges = await Info.getAgeRanges(dbUtils.getSession(req));
     const topCountries = await Info.getTopCountries(dbUtils.getSession(req), params);
-    switch (params.GROUPBY) {
-      case 0:
-        params.AREAS = await Info.getTopCountries(dbUtils.getSession(req), params);
-        break;
-      case 1:
-        params.AREAS = await Info.getTopRegions(dbUtils.getSession(req), params);
-        break;
-      case 2:
-        params.AREAS = await Info.getTopDepartments(dbUtils.getSession(req), params);
-        break;
-      case 3:
-        params.AREAS = await Info.getTopBoroughs(dbUtils.getSession(req), params);
-        break;
-      case 4:
-        params.AREAS = await Info.getTopDistricts(dbUtils.getSession(req), params);
-        break;
-      default:
-        break;
+    params.COUNTRIES = req.query.countries ? req.query.countries.split(',') : topCountries;
+
+    if (req.query.areas) params.AREAS = req.query.areas.split(',')
+    else {
+      switch (params.GROUPBY) {
+        case 0:
+          params.AREAS = await Info.getTopCountries(dbUtils.getSession(req), params);
+          break;
+        case 1:
+          params.AREAS = await Info.getTopRegions(dbUtils.getSession(req), params);
+          break;
+        case 2:
+          params.AREAS = await Info.getTopDepartments(dbUtils.getSession(req), params);
+          break;
+        case 3:
+          params.AREAS = await Info.getTopBoroughs(dbUtils.getSession(req), params);
+          break;
+        case 4:
+          params.AREAS = await Info.getTopDistricts(dbUtils.getSession(req), params);
+          break;
+        default:
+          break;
+      }
     }
 
     const monthly = await Destination.getMonths(dbUtils.getSession(req), params);
@@ -60,8 +65,8 @@ router.get("/:year/:from/:groupby", async (req, res, next) => {
     let selectedYear = params['YEAR'];
 
     // Year array [selectedYear...selectedYear-3]
-    yearArr = Updater.yearArray(params['YEAR'], params['YEAR'] - 3);
-
+    yearArr = Updater.yearArray(params['YEAR'], params['YEAR'] - 2);
+    console.log(yearArr);
     // All evolution over the years
     for (const year of yearArr) {
       params['YEAR'] = year;
@@ -70,6 +75,9 @@ router.get("/:year/:from/:groupby", async (req, res, next) => {
 
       evolution = await Destination.getGoingValues(dbUtils.getSession(req), params, totalValues, prevArray);
       prevArray = await Object.assign({}, evolution);
+
+      centrality = await Destination.getAreasPageRank(dbUtils.getSession(req), params, prevArrayCentral);
+      prevArrayCentral = await Object.assign({}, centrality);
     }
 
     // diff percentage between the last two years
@@ -78,6 +86,7 @@ router.get("/:year/:from/:groupby", async (req, res, next) => {
 
     // Write response
     writeResponse(res, {
+      'Centrality': Updater.diff(centrality),
       'TotalReviews': totalValuesArr,
       'Evolution': Updater.diffGoing(evolution),
       'Monthly': monthly,
@@ -121,7 +130,7 @@ router.get("/:year/:from/:groupby/info", async (req, res, next) => {
         topAreas = await Info.getTopRegions(dbUtils.getSession(req), params);
         break;
       case 2:
-       topAreas = await Info.getTopDepartments(dbUtils.getSession(req), params);
+        topAreas = await Info.getTopDepartments(dbUtils.getSession(req), params);
         break;
       case 3:
         topAreas = await Info.getTopBoroughs(dbUtils.getSession(req), params);
@@ -133,11 +142,11 @@ router.get("/:year/:from/:groupby/info", async (req, res, next) => {
         break;
     }
 
-      writeResponse(res, {
-        "topCountries": topCountries,
-        "topAges": topAges,
-        "topAreas": topAreas
-      });
+    writeResponse(res, {
+      "topCountries": topCountries,
+      "topAges": topAges,
+      "topAreas": topAreas
+    });
   }
   else {
     writeError(res, {

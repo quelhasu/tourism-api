@@ -38,7 +38,7 @@ router.get("/:year/", async (req, res, next) => {
       params['YEAR'] = year;
       reviews = await International.getTotalByYear(dbUtils.getSession(req), params);
       reviewsArr[year] = reviews;
-
+      
       evolution = await International.getCountriesValuesByYear(dbUtils.getSession(req), params, reviews, prevArray);
       prevArray = await Object.assign({}, evolution);
     }

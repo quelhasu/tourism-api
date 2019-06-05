@@ -85,11 +85,13 @@ exports.diff = (array) => {
       i = 0;
       for (var year in array[country]) {
         if (i == (Object.keys(array[country]).length) - 2) {
-          array[country]['diff'] =
-            {
-              'value': Number(array[country][eval(year) + 1]['value'] - array[country][year]['value']).roundDecimal(2)
-            }
-          break;
+          if (array[country] && array[country][year] && array[country][eval(year) + 1]) {
+            array[country]['diff'] =
+              {
+                'value': Number(array[country][eval(year) + 1]['value'] - array[country][year]['value']).roundDecimal(2)
+              }
+            break;
+          }
         }
         i++
       }
