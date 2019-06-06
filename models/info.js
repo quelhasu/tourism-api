@@ -2,6 +2,39 @@
  * @namespace Info
  */
 
+
+ /**
+* Finds all touristic and its number of trips for all trip for a given year
+* 
+* @function getTopTouristic
+* @memberof Info
+* 
+* @param {Object} sessions - Neo4j context session
+* @param {Object} params - Query's parameters
+* 
+* @return {String[]} Array with all touristic areas found
+*/
+exports.getTopTouristic = (session, params) => new Promise((resolve, reject) => {
+  var topTouristics   = [];
+  session
+    .run('MATCH (a1:Area_4{name_0:"France"})-[v:trip{year:{YEAR}}]-> \
+    (a2:Area_4{name_2:"Gironde" ,name_1:"Nouvelle-Aquitaine", name_0:"France"}) \
+    WHERE exists(a1.name_touri)  and a1.name_touri is not null \
+    RETURN a1.name_touri as touri, \
+    sum(v.nb) as NB order by NB \
+    desc LIMIT {TOP}', params)
+    .then(result => {
+      result.records.forEach(record => {
+        topTouristics.push(record.get("touri"));
+      });
+      resolve(topTouristics);
+    })
+    .catch(error => {
+      console.log("Erreur : " + error);
+      reject(error);
+    })
+})
+
  /**
 * Finds all bourough and its number of trips for all trip between 
 * France and Nouvelle-Aquitaine - France for a given year 

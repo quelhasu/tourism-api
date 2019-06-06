@@ -44,9 +44,9 @@ exports.getGoingValues = (session, params, totReviews, prevArray = null) => {
     .run(
       `MATCH (a0:Area_${params.GROUPBY}) -[a1:trip{year:{YEAR}}]- (a2:Area_${params.GROUPBY}) \
       WHERE a0.${params.FROM} AND a2.${params.FROM} \
-      AND a0.name IN {AREAS}\
-       AND a2.name IN {AREAS} and a1.nat in {COUNTRIES} {AGES} \
-       RETURN a0.name as name, \
+      AND a0.${params.NAME} IN {AREAS}\
+       AND a2.${params.NAME} IN {AREAS} and a1.nat in {COUNTRIES} {AGES} \
+       RETURN a0.${params.NAME} as name, \
        sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1, \
        sum(case when ((a0) <-[a1]- (a2) ) then a1.nb else 0 end) as NB2 \
        order by (NB1+NB2) desc`.replace(/{AGES}/g, params.AGES), params)
@@ -83,22 +83,22 @@ exports.getMonths = (session, params) => {
   return Info.getMonthsValues(
     session,
     params,
-    `MATCH (a0:Area_${params.GROUPBY}) -[a1:trip{year:{YEAR}}]- (a2:Area_${params.GROUPBY}) \
+    `MATCH (a0:Area_${params.GROUPBY}) -[a1:trip{year:{YEAR}}]-> (a2:Area_${params.GROUPBY}) \
     WHERE a0.${params.FROM} AND a2.${params.FROM} \
-    AND a0.name IN {AREAS}\
-     AND a2.name IN {AREAS} and a1.nat in {COUNTRIES} {AGES} \
-    RETURN a0.name as name, a1.month as month, sum(a1.nb) as NB \
+    AND a0.${params.NAME} IN {AREAS}\
+     AND a2.${params.NAME} IN {AREAS} and a1.nat in {COUNTRIES} {AGES} \
+    RETURN a0.${params.NAME} as name, a1.month as month, sum(a1.nb) as NB \
     order by NB desc`,
     'Ingoing', 'name')
     .then(result => {
       return Info.getMonthsValues(
         session,
         params,
-        `MATCH (a0:Area_${params.GROUPBY}) -[a1:trip{year:{YEAR}}]- (a2:Area_${params.GROUPBY}) \
+        `MATCH (a0:Area_${params.GROUPBY}) <-[a1:trip{year:{YEAR}}]- (a2:Area_${params.GROUPBY}) \
         WHERE a0.${params.FROM} AND a2.${params.FROM} \
-        AND a0.name IN {AREAS}\
-         AND a2.name IN {AREAS} and a1.nat in {COUNTRIES} {AGES} \
-        RETURN a0.name as name, a1.month as month, sum(a1.nb) as NB \
+        AND a0.${params.NAME} IN {AREAS}\
+         AND a2.${params.NAME} IN {AREAS} and a1.nat in {COUNTRIES} {AGES} \
+        RETURN a0.${params.NAME} as name, a1.month as month, sum(a1.nb) as NB \
         order by NB desc`,
         'Outgoing', 'name',
         result);
@@ -133,14 +133,14 @@ exports.getAreasPageRank = async (session, params, array=null) => {
     session,
     paramsCopy,
     `CALL algo.pageRank.stream(\'MATCH (a:Area_${params.GROUPBY}) \
-    where a.${params.FROM.replace(/'/g, '"')} and a.name in ${paramsCopy.AREAS} RETURN  id(a) as id\', \'\
+    where a.${params.FROM.replace(/'/g, '"')} and a.${params.NAME} in ${paramsCopy.AREAS} RETURN  id(a) as id\', \'\
     MATCH (a0:Area_${params.GROUPBY})-[a1:trip{year:${paramsCopy.YEAR}}]->(a2:Area_${params.GROUPBY}) \
-    where a0.name in ${paramsCopy.AREAS} and a2.name in ${paramsCopy.AREAS} \
+    where a0.${params.NAME} in ${paramsCopy.AREAS} and a2.${params.NAME} in ${paramsCopy.AREAS} \
     and a0.${params.FROM.replace(/'/g, '"')} and a2.${params.FROM.replace(/'/g, '"')} \
     and a1.nat in ${paramsCopy.COUNTRIES} ${paramsCopy.AGES == "" ? "" : paramsCopy.AGES.replace(/'/g, '"')} \
     RETURN id(a0) as source, id(a2) as target, sum(toFloat(a1.nb)) as weight\', {graph:\'cypher\', \
     dampingFactor:0.85, iterations:50, write: true, weightProperty:\'weight\'} ) \
-    YIELD node, score RETURN node.name AS shape_gid, sum(score) as score ORDER BY score DESC LIMIT 10;`,
+    YIELD node, score RETURN node.${params.NAME} AS shape_gid, sum(score) as score ORDER BY score DESC LIMIT 10;`,
     'shape_gid',
     array
   );

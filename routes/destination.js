@@ -30,6 +30,7 @@ router.get("/:year/:from/:groupby", async (req, res, next) => {
       YEAR: Number(req.params.year),
       TOP: Number(req.query.limit) || 12,
       AGES: Updater.ages(req.query.ages),
+      NAME: 'name'
     };
 
     // Get top information for groupby
@@ -55,11 +56,17 @@ router.get("/:year/:from/:groupby", async (req, res, next) => {
         case 4:
           params.AREAS = await Info.getTopDistricts(dbUtils.getSession(req), params);
           break;
+        case 2.5:
+          params.AREAS = await Info.getTopTouristic(dbUtils.getSession(req), params);
+          params.GROUPBY = 4;
+          params.NAME = 'name_touri';
+          break;
         default:
           break;
       }
     }
 
+    
     const monthly = await Destination.getMonths(dbUtils.getSession(req), params);
 
     let selectedYear = params['YEAR'];
