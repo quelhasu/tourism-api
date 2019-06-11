@@ -23,26 +23,28 @@ exports.getDepartmentsGoingValues = (session, params, totReviews, prevArray = nu
   var regionsYear = prevArray || {};
   return session
     .run(
-      'MATCH (a0:Area_2{name_0:"France"})  -[a1:trip{year:{YEAR}}]- \
+      'MATCH (a0:Area_2{name_0:"France"})  -[a1:trip]- \
     (a2:Area_2{name_1:"Nouvelle-Aquitaine"}) \
     where a0.name in {DEPARTMENTS} and a1.nat in {COUNTRIES} {AGES} \
-    RETURN a0.name as department, \
+    AND a1.year IN {YEARS} \
+    RETURN toInteger(a1.year) as year, a0.name as department, \
     sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1, \
     sum(case when ((a0) <-[a1]- (a2) ) then a1.nb else 0 end) as NB2 \
     order by (NB1+NB2) desc'.replace(/{AGES}/g,params.AGES),params)
     .then(result => {
       result.records.forEach(record => {
         region = record.get("department");
+        year = record.get("year");
         !(region in regionsYear) && (regionsYear[region] = {});
-        !(params.YEAR in regionsYear[region]) && (regionsYear[region][params.YEAR] = {});
-        regionsYear[region][params.YEAR]["Ingoing"] = Math.round((10000 * record.get("NB1")) / totReviews["NB1"]) / 100;
-        regionsYear[region][params.YEAR]["Outgoing"] = Math.round((10000 * record.get("NB2")) / totReviews["NB1"]) / 100;
+        !(year in regionsYear[region]) && (regionsYear[region][year] = {});
+        regionsYear[region][year]["Ingoing"] = Math.round((10000 * record.get("NB1")) / totReviews[year]["NB1"]) / 100;
+        regionsYear[region][year]["Outgoing"] = Math.round((10000 * record.get("NB2")) / totReviews[year]["NB2"]) / 100;
       });
       session.close();
       return regionsYear;
     })
     .catch(error => {
-      console.log("Erreur : " + error);
+      console.log("Erreur going values : " + error);
       return null;
     });
 };
@@ -61,9 +63,10 @@ exports.getDepartmentsGoingValues = (session, params, totReviews, prevArray = nu
  */
 exports.getTotalByYear = (session, params) => {
   return Info.getTotByYear(session, params,
-    'MATCH (a0:Area_2{name_0:"France"}) -[a1:trip{year:{YEAR}}]- \
+    'MATCH (a0:Area_2{name_0:"France"}) -[a1:trip]- \
     (a2:Area_2{name_1:"Nouvelle-Aquitaine"}) \
-    RETURN sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1, \
+    WHERE a1.year IN {YEARS} \
+    RETURN a1.year as year, sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1, \
     sum(case when ((a0) <-[a1]- (a2) ) then a1.nb else 0 end) as NB2',
     [1,2]);
 };

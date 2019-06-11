@@ -11,67 +11,79 @@ router.get("/", (req, res, next) => {
   res.send("hey");
 });
 
-router.get("/:year/", async (req, res, next) => {
-  try{
-  let yearArr = [];
-  let evolution = {};
-  let centrality = {};
-  let totalValuesArr = {};
-  let totalValues = null;
-  let prevArray = null;
-  let prevArrayCentral = null;
+router.get("/:year/annual", async (req, res, next) => {
+  try {
+    let evolution = {};
+    let totalValues = null;
 
-  // Parameters definition
-  params = {
-    YEAR: Number(req.params.year),
-    TOP: Number(req.query.limit) || 10,
-    AGES: Updater.ages(req.query.ages)  
-  };
+    // Parameters definition
+    params = {
+      YEAR: Number(req.params.year),
+      TOP: Number(req.query.limit) || 10,
+      AGES: Updater.ages(req.query.ages)
+    };
 
 
-  // Get top information
-  const topAges = await Info.getAgeRanges(dbUtils.getSession(req));
-  const topCountries = await Info.getTopCountries(dbUtils.getSession(req), params);
-  const topDepartments = await Info.getTopDepartments(dbUtils.getSession(req), params);
+    // Get top information
+    const topAges = await Info.getAgeRanges(dbUtils.getSession(req));
+    const topCountries = await Info.getTopCountries(dbUtils.getSession(req), params);
+    const topDepartments = await Info.getTopDepartments(dbUtils.getSession(req), params);
 
-  params.COUNTRIES = req.query.countries ? req.query.countries.split(',') : topCountries;
-  params.DEPARTMENTS = req.query.departments ? req.query.departments.split(',') : topDepartments;
-  
-  // Monthly evolution
-  const monthly = await National.getMonths(dbUtils.getSession(req), params);
+    params.COUNTRIES = req.query.countries ? req.query.countries.split(',') : topCountries;
+    params.DEPARTMENTS = req.query.departments ? req.query.departments.split(',') : topDepartments;
 
-  let selectedYear = params.YEAR;
-  yearArr = Updater.yearArray(params.YEAR, params.YEAR - 2);
-  
-  // All evolution over the years
-  for (const year of yearArr){
-    params.YEAR = year;
+    // Monthly evolution
+
+    let selectedYear = params['YEAR'];
+
+    // Year array [selectedYear...selectedYear-3]
+    params.YEARS = Updater.yearArray(params['YEAR'], params['YEAR'] - 2);
     totalValues = await National.getTotalByYear(dbUtils.getSession(req), params);
-    totalValuesArr[year] = totalValues;
+    totalValues['diff'] = Updater.percentDiff(totalValues[selectedYear - 1], totalValues[selectedYear])
 
-    evolution = await National.getDepartmentsGoingValues(dbUtils.getSession(req), params, totalValues, prevArray);
-    prevArray = await Object.assign({}, evolution);
-
-    centrality = await National.getDepartmentsPageRank(dbUtils.getSession(req), params, prevArrayCentral);
-    prevArrayCentral = await Object.assign({}, centrality);
-  }
-
-  // diff percentage between the last two years
-  totalValuesArr['diff'] = Updater.percentDiff(totalValuesArr[selectedYear - 1], totalValuesArr[selectedYear])
-  
-  // Write response
+    evolution = await National.getDepartmentsGoingValues(dbUtils.getSession(req), params, totalValues);
+    
+    // Write response
     writeResponse(res, {
-      'Centrality': Updater.diff(centrality),
-      'TotalReviews': totalValuesArr,
+      'TotalReviews': totalValues,
       'Evolution': Updater.diffGoing(evolution),
-      'Monthly': monthly,
       "TopInfo": {
         "topCountries": topCountries,
         "topAges": topAges,
         "topDepartments": topDepartments
       }
     })
-  } catch(e) {
+  } catch (e) {
+    writeError(res, {
+      "API Error": e.message
+    })
+  }
+});
+
+router.get("/:year/monthly", async (req, res, next) => {
+  try {
+    // Parameters definition
+    params = {
+      YEAR: Number(req.params.year),
+      TOP: Number(req.query.limit) || 10,
+      AGES: Updater.ages(req.query.ages)
+    };
+
+    // Get top information
+    const topCountries = await Info.getTopCountries(dbUtils.getSession(req), params);
+    const topDepartments = await Info.getTopDepartments(dbUtils.getSession(req), params);
+
+    params.COUNTRIES = req.query.countries ? req.query.countries.split(',') : topCountries;
+    params.DEPARTMENTS = req.query.departments ? req.query.departments.split(',') : topDepartments;
+
+    // Monthly evolution
+    const monthly = await National.getMonths(dbUtils.getSession(req), params);
+
+    // Write response
+    writeResponse(res, {
+      'Monthly': monthly
+    })
+  } catch (e) {
     writeError(res, {
       "API Error": e.message
     })
@@ -95,21 +107,62 @@ const getNationalInfo = (req) => {
       Info.getTopCountries(session, params),
       Info.getAgeRanges(session, params),
     ])
-    .then(([topDepartments, topCountries, topAges]) => {
-      session.close();
-      topDepartments.push('Nouvelle-Aquitaine');
-      resolve({
-        "topDepartments": topDepartments,
-        "topCountries": topCountries,
-        "topAges": topAges,
+      .then(([topDepartments, topCountries, topAges]) => {
+        session.close();
+        topDepartments.push('Nouvelle-Aquitaine');
+        resolve({
+          "topDepartments": topDepartments,
+          "topCountries": topCountries,
+          "topAges": topAges,
+        })
       })
-    })
-    .catch(err => {
-      session.close();
-      console.log(err);
-      reject(err);
-    })
+      .catch(err => {
+        session.close();
+        console.log(err);
+        reject(err);
+      })
   })
 }
 
+router.get("/:year/centrality", async (req, res, next) => {
+  try {
+    let evolution = {};
+    let centrality = {};
+    let totalValues = null;
+    let prevArray = null;
+
+    // Parameters definition
+    params = {
+      YEAR: Number(req.params.year),
+      TOP: Number(req.query.limit) || 10,
+      AGES: Updater.ages(req.query.ages)
+    };
+
+    params.COUNTRIES = req.query.countries ? req.query.countries.split(',') : await Info.getTopCountries(dbUtils.getSession(req), params)
+    params.DEPARTMENTS = req.query.departments ? req.query.departments.split(',') :  await Info.getTopDepartments(dbUtils.getSession(req), params)
+    // Monthly evolution
+    // const monthly = await National.getMonths(dbUtils.getSession(req), params);
+
+    // Year array [selectedYear...selectedYear-3]
+    params.YEARS = Updater.yearArray(params['YEAR'], params['YEAR'] - 2);
+
+    // All evolution over the years
+    for(const year of params.YEARS){
+      params['YEAR'] = year;
+      centrality = await National.getDepartmentsPageRank(dbUtils.getSession(req), params, prevArray);
+      prevArray = await Object.assign({}, centrality);
+    }
+
+    // Write response
+    writeResponse(res, {
+      'Centrality': Updater.diff(centrality)
+    })
+  } catch (e) {
+    writeError(res, {
+      "API Error": e.message
+    })
+  }
+});
+
 module.exports = router;
+
