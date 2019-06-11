@@ -18,10 +18,11 @@ const Info = require('./info');
  */
 exports.getTotalByYear = (session, params) => {
   return Info.getTotByYear(session, params,
-    `MATCH (a0:Area_${params.GROUPBY}) -[a1:trip{year:{YEAR}}]-  \
+    `MATCH (a0:Area_${params.GROUPBY}) -[a1:trip]-  \
     (a2:Area_${params.GROUPBY}) \
     WHERE a0.${params.FROM} AND a2.${params.FROM} \
-    RETURN sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1`,
+    AND a1.year IN {YEARS}
+    RETURN a1.year as year, sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1`,
     [1]);
 }
 
@@ -42,21 +43,23 @@ exports.getGoingValues = (session, params, totReviews, prevArray = null) => {
   var regionsYear = prevArray || {};
   return session
     .run(
-      `MATCH (a0:Area_${params.GROUPBY}) -[a1:trip{year:{YEAR}}]- (a2:Area_${params.GROUPBY}) \
+      `MATCH (a0:Area_${params.GROUPBY}) -[a1:trip]- (a2:Area_${params.GROUPBY}) \
       WHERE a0.${params.FROM} AND a2.${params.FROM} \
+      AND a1.year IN {YEARS} \
       AND a0.${params.NAME} IN {AREAS}\
        AND a2.${params.NAME} IN {AREAS} and a1.nat in {COUNTRIES} {AGES} \
-       RETURN a0.${params.NAME} as name, \
+       RETURN a1.year as year, a0.${params.NAME} as name, \
        sum(case when ((a0) -[a1]-> (a2) ) then a1.nb else 0 end) as NB1, \
        sum(case when ((a0) <-[a1]- (a2) ) then a1.nb else 0 end) as NB2 \
        order by (NB1+NB2) desc`.replace(/{AGES}/g, params.AGES), params)
     .then(result => {
       result.records.forEach(record => {
+        year = record.get("year");
         shape = record.get("name");
         !(shape in regionsYear) && (regionsYear[shape] = {});
-        !(params.YEAR in regionsYear[shape]) && (regionsYear[shape][params.YEAR] = {});
-        regionsYear[shape][params.YEAR]["Ingoing"] = Math.round((10000 * record.get("NB1")) / totReviews["NB1"]) / 100;
-        regionsYear[shape][params.YEAR]["Outgoing"] = Math.round((10000 * record.get("NB2")) / totReviews["NB1"]) / 100;
+        !(year in regionsYear[shape]) && (regionsYear[shape][year] = {});
+        regionsYear[shape][year]["Ingoing"] = Math.round((10000 * record.get("NB1")) / totReviews[year]["NB1"]) / 100;
+        regionsYear[shape][year]["Outgoing"] = Math.round((10000 * record.get("NB2")) / totReviews[year]["NB1"]) / 100;
       });
       session.close();
       return regionsYear;
@@ -138,10 +141,10 @@ exports.getAreasPageRank = async (session, params, array=null) => {
     where a0.${params.NAME} in ${paramsCopy.AREAS} and a2.${params.NAME} in ${paramsCopy.AREAS} \
     and a0.${params.FROM.replace(/'/g, '"')} and a2.${params.FROM.replace(/'/g, '"')} \
     and a1.nat in ${paramsCopy.COUNTRIES} ${paramsCopy.AGES == "" ? "" : paramsCopy.AGES.replace(/'/g, '"')} \
-    RETURN id(a0) as source, id(a2) as target, sum(toFloat(a1.nb)) as weight\', {graph:\'cypher\', \
+    RETURN a1.year as year, id(a0) as source, id(a2) as target, sum(toFloat(a1.nb)) as weight\', {graph:\'cypher\', \
     dampingFactor:0.85, iterations:50, write: true, weightProperty:\'weight\'} ) \
-    YIELD node, score RETURN node.${params.NAME} AS shape_gid, sum(score) as score ORDER BY score DESC LIMIT 10;`,
-    'shape_gid',
+    YIELD node, score RETURN node.${params.NAME} AS name, sum(score) as score ORDER BY score DESC LIMIT ${paramsCopy.TOP};`,
+    'name',
     array
   );
 };

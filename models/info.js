@@ -317,11 +317,13 @@ exports.getTotByYear = (session, params, q, nbArgs) => new Promise(async (resolv
       .run(q, params)
       .then(result => {
         result.records.forEach(record => {
+          let year = record.get('year');
           nbArgs.forEach(i => {
-            nbTot['NB' + i] = record.get("NB" + i).low;
+            !(year in nbTot) && (nbTot[year] = {});
+            nbTot[year]['NB' + i] = record.get("NB" + i).low;
           })
         })
-        nbTot['Year'] = params.YEAR;
+        // nbTot['Year'] = params.YEAR;
         session.close();
         resolve(nbTot);
       })
@@ -354,10 +356,10 @@ exports.getPageRank = (session, params, q, arg, array = null) => new Promise(asy
     .run(q, params)
     .then(result => {
       result.records.forEach(record => {
-        var region = record.get(arg)
-        !(region in object) && (object[region] = {});
-        !(params.YEAR in object[region]) && (object[region][params.YEAR] = {});
-        object[region][params.YEAR]['value'] = record.get("score").roundDecimal(2);
+        var area = record.get(arg)
+        !(area in object) && (object[area] = {});
+        !(params.YEAR in object[area]) && (object[area][params.YEAR] = {});
+        object[area][params.YEAR]['value'] = record.get("score").roundDecimal(2);
       })
       session.close();
       resolve(object);

@@ -12,7 +12,109 @@ router.get("/", (req, res, next) => {
   res.send("hey");
 });
 
-router.get("/:year/:from/:groupby", async (req, res, next) => {
+router.get("/:year/:from/:groupby/annual", async (req, res, next) => {
+
+  if (Updater.verifyNames(req.params.from, req.params.groupby)) {
+    let yearArr = [];
+    let evolution = {};
+    let centrality = {};
+    let totalValuesArr = {};
+    let totalValues = null;
+    let prevArray = null;
+    let prevArrayCentral = null;
+
+    // Parameters definition
+    params = {
+      FROM: req.params.from.nameQueryFrom(),
+      GROUPBY: Number(req.params.groupby),
+      YEAR: Number(req.params.year),
+      TOP: Number(req.query.limit) || 8,
+      AGES: Updater.ages(req.query.ages),
+      NAME: 'name'
+    };
+
+    // Get top information for groupby
+    const topAges = await Info.getAgeRanges(dbUtils.getSession(req));
+    const topCountries = await Info.getTopCountries(dbUtils.getSession(req), params);
+    params.COUNTRIES = req.query.countries ? req.query.countries.split(',') : topCountries;
+
+    switch (params.GROUPBY) {
+      case 0:
+        params.AREAS = req.query.areas ? req.query.areas.split(',') : await Info.getTopCountries(dbUtils.getSession(req), params);
+        break;
+      case 1:
+        params.AREAS = req.query.areas ? req.query.areas.split(',') : await Info.getTopRegions(dbUtils.getSession(req), params);
+        break;
+      case 2:
+        params.AREAS = req.query.areas ? req.query.areas.split(',') : await Info.getTopDepartments(dbUtils.getSession(req), params);
+        break;
+      case 3:
+        params.AREAS = req.query.areas ? req.query.areas.split(',') : await Info.getTopBoroughs(dbUtils.getSession(req), params);
+        break;
+      case 4:
+        params.AREAS = req.query.areas ? req.query.areas.split(',') : await Info.getTopDistricts(dbUtils.getSession(req), params);
+        break;
+      case 2.5:
+        params.AREAS = req.query.areas ? req.query.areas.split(',') : await Info.getTopTouristic(dbUtils.getSession(req), params);
+        params.GROUPBY = 4;
+        params.NAME = 'name_touri';
+        break;
+      default:
+        break;
+    }
+
+    let selectedYear = params['YEAR'];
+
+    // Year array [selectedYear...selectedYear-3]
+    // yearArr = Updater.yearArray(params['YEAR'], params['YEAR'] - 2);
+    params.YEARS = Updater.yearArray(params['YEAR'], params['YEAR'] - 2);
+    totalValues = await Destination.getTotalByYear(dbUtils.getSession(req), params);
+    totalValues['diff'] = Updater.percentDiff(totalValues[selectedYear - 1], totalValues[selectedYear])
+
+    evolution = await Destination.getGoingValues(dbUtils.getSession(req), params, totalValues);
+
+    for(const year of params.YEARS){
+      params['YEAR'] = year;
+      centrality = await Destination.getAreasPageRank(dbUtils.getSession(req), params, prevArray);
+      prevArray = await Object.assign({}, centrality);
+    }
+
+    // // All evolution over the years
+    // for (const year of yearArr) {
+    //   params['YEAR'] = year;
+    //   totalValues = await Destination.getTotalByYear(dbUtils.getSession(req), params);
+    //   totalValuesArr[year] = totalValues;
+
+
+    // prevArray = await Object.assign({}, evolution);
+
+    // prevArrayCentral = await Object.assign({}, centrality);
+    // }
+
+    // // diff percentage between the last two years
+
+
+    // Write response
+    writeResponse(res, {
+      // 'parasm': params,
+      'Centrality': Updater.diff(centrality),
+      'TotalReviews': totalValues,
+      'Evolution': Updater.diffGoing(evolution),
+      "TopInfo": {
+        "topCountries": topCountries,
+        "topAges": topAges,
+        "topAreas": params.AREAS
+      }
+    })
+  }
+  else {
+    writeError(res, {
+      "error": `not possible to combine from name_${req.params.from} with groupby name_${req.params.groupby}`
+    })
+  }
+});
+
+router.get("/:year/:from/:groupby/monthly", async (req, res, next) => {
 
   if (Updater.verifyNames(req.params.from, req.params.groupby)) {
     let yearArr = [];
@@ -66,41 +168,12 @@ router.get("/:year/:from/:groupby", async (req, res, next) => {
       }
     }
 
-    
+
     const monthly = await Destination.getMonths(dbUtils.getSession(req), params);
-
-    let selectedYear = params['YEAR'];
-
-    // Year array [selectedYear...selectedYear-3]
-    yearArr = Updater.yearArray(params['YEAR'], params['YEAR'] - 2);
-    // All evolution over the years
-    for (const year of yearArr) {
-      params['YEAR'] = year;
-      totalValues = await Destination.getTotalByYear(dbUtils.getSession(req), params);
-      totalValuesArr[year] = totalValues;
-
-      evolution = await Destination.getGoingValues(dbUtils.getSession(req), params, totalValues, prevArray);
-      prevArray = await Object.assign({}, evolution);
-
-      centrality = await Destination.getAreasPageRank(dbUtils.getSession(req), params, prevArrayCentral);
-      prevArrayCentral = await Object.assign({}, centrality);
-    }
-
-    // diff percentage between the last two years
-    totalValuesArr['diff'] = Updater.percentDiff(totalValuesArr[selectedYear - 1], totalValuesArr[selectedYear])
-
 
     // Write response
     writeResponse(res, {
-      'Centrality': Updater.diff(centrality),
-      'TotalReviews': totalValuesArr,
-      'Evolution': Updater.diffGoing(evolution),
       'Monthly': monthly,
-      "TopInfo": {
-        "topCountries": topCountries,
-        "topAges": topAges,
-        "topAreas": params.AREAS
-      }
     })
   }
   else {
@@ -180,5 +253,97 @@ const getGroupingInfo = (req) => {
       })
   })
 }
+
+router.get("/:year/:from/:groupby/centrality", async (req, res, next) => {
+
+  if (Updater.verifyNames(req.params.from, req.params.groupby)) {
+    let yearArr = [];
+    let evolution = {};
+    let centrality = {};
+    let totalValuesArr = {};
+    let totalValues = null;
+    let prevArray = null;
+    let prevArrayCentral = null;
+
+    // Parameters definition
+    params = {
+      FROM: req.params.from.nameQueryFrom(),
+      GROUPBY: Number(req.params.groupby),
+      YEAR: Number(req.params.year),
+      TOP: Number(req.query.limit) || 8,
+      AGES: Updater.ages(req.query.ages),
+      NAME: 'name',
+      YEARS: Number(req.query.years) || 2
+    };
+
+    // Get top information for groupby
+    const topAges = await Info.getAgeRanges(dbUtils.getSession(req));
+    const topCountries = await Info.getTopCountries(dbUtils.getSession(req), params);
+    params.COUNTRIES = req.query.countries ? req.query.countries.split(',') : topCountries;
+
+    switch (params.GROUPBY) {
+      case 0:
+        params.AREAS = req.query.areas ? req.query.areas.split(',') : await Info.getTopCountries(dbUtils.getSession(req), params);
+        break;
+      case 1:
+        params.AREAS = req.query.areas ? req.query.areas.split(',') : await Info.getTopRegions(dbUtils.getSession(req), params);
+        break;
+      case 2:
+        params.AREAS = req.query.areas ? req.query.areas.split(',') : await Info.getTopDepartments(dbUtils.getSession(req), params);
+        break;
+      case 3:
+        params.AREAS = req.query.areas ? req.query.areas.split(',') : await Info.getTopBoroughs(dbUtils.getSession(req), params);
+        break;
+      case 4:
+        params.AREAS = req.query.areas ? req.query.areas.split(',') : await Info.getTopDistricts(dbUtils.getSession(req), params);
+        break;
+      case 2.5:
+        params.AREAS = req.query.areas ? req.query.areas.split(',') : await Info.getTopTouristic(dbUtils.getSession(req), params);
+        params.GROUPBY = 4;
+        params.NAME = 'name_touri';
+        break;
+      default:
+        break;
+    }
+
+    let selectedYear = params['YEAR'];
+
+    // Year array [selectedYear...selectedYear-3]
+    // yearArr = Updater.yearArray(params['YEAR'], params['YEAR'] - params.YEARS);
+    params.YEARS = Updater.yearArray(params['YEAR'], params['YEAR'] - params.YEARS) 
+
+    for(const year of params.YEARS){
+      params['YEAR'] = year;
+      centrality = await Destination.getAreasPageRank(dbUtils.getSession(req), params, prevArray);
+      prevArray = await Object.assign({}, centrality);
+    }
+
+    // // All evolution over the years
+    // for (const year of yearArr) {
+    //   params['YEAR'] = year;
+    //   totalValues = await Destination.getTotalByYear(dbUtils.getSession(req), params);
+    //   totalValuesArr[year] = totalValues;
+
+
+    // prevArray = await Object.assign({}, evolution);
+
+    // prevArrayCentral = await Object.assign({}, centrality);
+    // }
+
+    // // diff percentage between the last two years
+
+
+    // Write response
+    writeResponse(res, {
+      // 'parasm': params,
+      'Centrality': Updater.diff(centrality)
+    })
+  }
+  else {
+    writeError(res, {
+      "error": `not possible to combine from name_${req.params.from} with groupby name_${req.params.groupby}`
+    })
+  }
+});
 
 module.exports = router;
