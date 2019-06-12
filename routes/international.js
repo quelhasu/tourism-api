@@ -20,6 +20,7 @@ router.get("/:year/annual", async (req, res, next) => {
       YEAR: Number(req.params.year),
       TOP: Number(req.query.limit) || 10,
       AGES: Updater.ages(req.query.ages),
+      TOPAREAS: Number(req.query.limitareas) || 10,
       TYPER: req.query.typer ? req.query.typer.split(',') : ['R', 'A', 'H']
     };
 

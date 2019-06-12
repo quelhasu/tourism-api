@@ -22,7 +22,7 @@ exports.getTopTouristic = (session, params) => new Promise((resolve, reject) => 
     WHERE exists(a1.name_touri)  and a1.name_touri is not null \
     RETURN a1.name_touri as touri, \
     sum(v.nb) as NB order by NB \
-    desc LIMIT {TOP}', params)
+    desc LIMIT {TOPAREAS}', params)
     .then(result => {
       result.records.forEach(record => {
         topTouristics.push(record.get("touri"));
@@ -54,7 +54,7 @@ exports.getTopBoroughs = (session, params) => new Promise((resolve, reject) => {
     (a2:Area_3{name_2:"Gironde" ,name_1:"Nouvelle-Aquitaine", name_0:"France"}) \
     RETURN a1.name as borough, \
     sum(v.nb) as NB order by NB \
-    desc LIMIT {TOP}', params)
+    desc LIMIT {TOPAREAS}', params)
     .then(result => {
       result.records.forEach(record => {
         topBoroughs.push(record.get("borough"));
@@ -86,7 +86,7 @@ exports.getTopDistricts = (session, params) => new Promise((resolve, reject) => 
     (a2:Area_4{name_3:"Bordeaux", name_2:"Gironde" ,name_1:"Nouvelle-Aquitaine", name_0:"France"}) \
     RETURN a1.name as district, \
     sum(v.nb) as NB order by NB \
-    desc LIMIT {TOP}', params)
+    desc LIMIT {TOPAREAS}', params)
     .then(result => {
       result.records.forEach(record => {
         topDistricts.push(record.get("district"));
@@ -118,7 +118,7 @@ exports.getTopDepartments = (session, params) => new Promise((resolve, reject) =
     (a2:Area_2{name_1:"Nouvelle-Aquitaine", name_0:"France"}) \
     RETURN a1.name as department, \
     sum(v.nb) as NB order by NB \
-    desc LIMIT {TOP}', params)
+    desc LIMIT {TOPAREAS}', params)
     .then(result => {
       result.records.forEach(record => {
         topDepartments.push(record.get("department"));
@@ -150,7 +150,7 @@ exports.getTopRegions = (session, params) => new Promise((resolve, reject) => {
     (a2:Area_1{name:"Nouvelle-Aquitaine", country:"France"}) \
     RETURN a1.name as region, \
     sum(v.nb) as NB order by NB \
-    desc LIMIT {TOP}', params)
+    desc LIMIT {TOPAREAS}', params)
     .then(result => {
       result.records.forEach(record => {
         topRegions.push(record.get("region"));
@@ -181,7 +181,7 @@ exports.getTopAreas = (session, params) => new Promise((resolve, reject) => {
     .run(`MATCH (a0:Area_4)-[a1:trip{year:{YEAR}}]->(a2:Area_4) \
     WHERE a0.${params.NAME} = {REGION} AND a2.${params.NAME} = {REGION}\
     RETURN a0.name_3 as shape, sum(a1.nb) as NB \
-    order by NB desc LIMIT {TOP}`, params)
+    order by NB desc LIMIT {TOPAREAS}`, params)
     .then(result => {
       result.records.forEach(record => {
         topRegions.push(record.get('shape'));

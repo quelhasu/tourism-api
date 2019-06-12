@@ -89,7 +89,7 @@ exports.getMonths = (session, params) => {
     `MATCH (a0:Area_${params.GROUPBY}) -[a1:trip{year:{YEAR}}]-> (a2:Area_${params.GROUPBY}) \
     WHERE a0.${params.FROM} AND a2.${params.FROM} \
     AND a0.${params.NAME} IN {AREAS}\
-     AND a2.${params.NAME} IN {AREAS} and a1.nat in {COUNTRIES} {AGES} \
+    AND a2.${params.NAME} IN {AREAS} AND a1.nat IN {COUNTRIES} {AGES} \
     RETURN a0.${params.NAME} as name, a1.month as month, sum(a1.nb) as NB \
     order by NB desc`,
     'Ingoing', 'name')
@@ -100,7 +100,7 @@ exports.getMonths = (session, params) => {
         `MATCH (a0:Area_${params.GROUPBY}) <-[a1:trip{year:{YEAR}}]- (a2:Area_${params.GROUPBY}) \
         WHERE a0.${params.FROM} AND a2.${params.FROM} \
         AND a0.${params.NAME} IN {AREAS}\
-         AND a2.${params.NAME} IN {AREAS} and a1.nat in {COUNTRIES} {AGES} \
+         AND a2.${params.NAME} IN {AREAS} AND a1.nat IN {COUNTRIES} {AGES} \
         RETURN a0.${params.NAME} as name, a1.month as month, sum(a1.nb) as NB \
         order by NB desc`,
         'Outgoing', 'name',
@@ -143,7 +143,7 @@ exports.getAreasPageRank = async (session, params, array=null) => {
     and a1.nat in ${paramsCopy.COUNTRIES} ${paramsCopy.AGES == "" ? "" : paramsCopy.AGES.replace(/'/g, '"')} \
     RETURN a1.year as year, id(a0) as source, id(a2) as target, sum(toFloat(a1.nb)) as weight\', {graph:\'cypher\', \
     dampingFactor:0.85, iterations:50, write: true, weightProperty:\'weight\'} ) \
-    YIELD node, score RETURN node.${params.NAME} AS name, sum(score) as score ORDER BY score DESC LIMIT ${paramsCopy.TOP};`,
+    YIELD node, score RETURN node.${params.NAME} AS name, sum(score) as score ORDER BY score DESC LIMIT ${paramsCopy.TOPAREAS};`,
     'name',
     array
   );

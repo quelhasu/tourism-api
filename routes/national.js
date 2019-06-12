@@ -20,6 +20,7 @@ router.get("/:year/annual", async (req, res, next) => {
     params = {
       YEAR: Number(req.params.year),
       TOP: Number(req.query.limit) || 10,
+      TOPAREAS: Number(req.query.limitareas) || 10,
       AGES: Updater.ages(req.query.ages)
     };
 
@@ -135,6 +136,7 @@ router.get("/:year/centrality", async (req, res, next) => {
     params = {
       YEAR: Number(req.params.year),
       TOP: Number(req.query.limit) || 10,
+      TOPAREAS: Number(req.query.limitareas) || 10,
       AGES: Updater.ages(req.query.ages)
     };
 
