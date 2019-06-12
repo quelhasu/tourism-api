@@ -11,13 +11,10 @@ router.get("/", (req, res, next) => {
   res.send("hey");
 });
 
-router.get("/:year/", async (req, res, next) => {
+router.get("/:year/annual", async (req, res, next) => {
   try {
-    let yearArr = [];
     let evolution = {};
     let reviewsArr = {};
-    let reviews = null;
-    let prevArray = null;
 
     params = {
       YEAR: Number(req.params.year),
@@ -32,31 +29,18 @@ router.get("/:year/", async (req, res, next) => {
 
     params.COUNTRIES = req.query.countries ? req.query.countries.split(',') : topCountries;
 
-    const monthly = await International.getMonths(dbUtils.getSession(req), params);
-
     let selectedYear = params['YEAR'];
 
     // Year array [selectedYear...selectedYear-3]
-    yearArr = Updater.yearArray(params['YEAR'], params['YEAR'] - 3);
-
-    // All evolution over the years
-    for (const year of yearArr) {
-      params['YEAR'] = year;
-      reviews = await International.getTotalByYear(dbUtils.getSession(req), params);
-      reviewsArr[year] = reviews;
-
-      evolution = await International.getCountriesValuesByYear(dbUtils.getSession(req), params, reviews, prevArray);
-      prevArray = await Object.assign({}, evolution);
-    }
-
-    // diff percentage between the last two years
+    params.YEARS = Updater.yearArray(params['YEAR'], params['YEAR'] - 2);
+    reviewsArr = await International.getTotalByYear(dbUtils.getSession(req), params);
     reviewsArr['diff'] = Updater.percentDiff(reviewsArr[selectedYear - 1], reviewsArr[selectedYear])
 
+    evolution = await International.getCountriesValuesByYear(dbUtils.getSession(req), params, reviewsArr);
 
     writeResponse(res, {
       "TotalReviews": reviewsArr,
       "Evolution": Updater.diff(evolution),
-      "Monthly": monthly,
       "TopInfo": {
         "topCountries": topCountries,
         "topAges": topAges
@@ -70,6 +54,31 @@ router.get("/:year/", async (req, res, next) => {
   }
 });
 
+router.get("/:year/monthly", async (req, res, next) => {
+  try {
+    
+    params = {
+      YEAR: Number(req.params.year),
+      TOP: Number(req.query.limit) || 10,
+      AGES: Updater.ages(req.query.ages),
+      TYPER: req.query.typer ? req.query.typer.split(',') : ['R', 'A', 'H']
+    };
+
+    // Get top information
+    params.COUNTRIES = req.query.countries ? req.query.countries.split(',') : await Info.getTopCountries(dbUtils.getSession(req), params);
+
+    const monthly = await International.getMonths(dbUtils.getSession(req), params);
+
+    writeResponse(res, {
+      "Monthly": monthly
+    });
+  }
+  catch (e) {
+    writeError(res, {
+      "API Error": e.message
+    })
+  }
+});
 
 router.get("/:year/info", (req, res, next) => {
   params = {

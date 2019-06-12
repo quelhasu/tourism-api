@@ -18,10 +18,11 @@ const Info = require('./info');
  */
 exports.getTotalByYear = (session, params) => {
   return Info.getTotByYear(session, params,
-    'MATCH (a1:User)-[v:review{year:{YEAR}}]->\
+    'MATCH (a1:User)-[v:review]->\
     (a2:Location{gid_1:"FRA.10_1", gid_0:"FRA"}) \
     where a1.country in {COUNTRIES} {AGES} \
-    RETURN count(*) as NB1'.replace(/{AGES}/g, params.AGES),
+    AND v.year IN {YEARS} \
+    RETURN v.year as year, count(*) as NB1'.replace(/{AGES}/g, params.AGES),
     [1]);
 }
 
@@ -43,17 +44,19 @@ exports.getCountriesValuesByYear = (session, params, totReviews, prevArray = nul
   var coutriesYear = prevArray || {};
   return session
     .run(
-      'MATCH (a1:User)-[v:review{year:{YEAR}}]->\
+      'MATCH (a1:User)-[v:review]->\
       (a2:Location{gid_1:"FRA.10_1", gid_0:"FRA"}) \
       where a1.country in {COUNTRIES} {AGES} and a2.typeR IN {TYPER} \
-      RETURN a1.country as country, count(*) as NB1 \
+      AND v.year IN {YEARS} \
+      RETURN v.year as year, a1.country as country, count(*) as NB1 \
       order by NB1 desc'.replace(/{AGES}/g, params.AGES), params)
     .then(result => {
       result.records.forEach(record => {
-        country = record.get("country");
+        country = record.get("country")
+        year = record.get("year")
         !(country in coutriesYear) && (coutriesYear[country] = {});
-        !(params.YEAR in coutriesYear[country]) && (coutriesYear[country][params.YEAR] = {});
-        coutriesYear[country][params.YEAR]['value'] = Math.round((10000 * record.get("NB1")) / totReviews["NB1"]) / 100;
+        !(year in coutriesYear[country]) && (coutriesYear[country][year] = {});
+        coutriesYear[country][year]['value'] = Math.round((10000 * record.get("NB1")) / totReviews[year]["NB1"]) / 100;
       });
       session.close();
       return coutriesYear;
