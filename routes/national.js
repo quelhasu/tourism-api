@@ -91,6 +91,18 @@ router.get("/:year/monthly", async (req, res, next) => {
   }
 });
 
+router.get("/:year/info/areas", (req, res, next) => {
+  params = {
+    YEAR: Number(req.params.year),
+    TOP: Number(req.query.limit) || 100
+  };
+  
+  Info.getTopDepartments(dbUtils.getSession(req), this.params).then(result => {
+    writeResponse(res, {
+      'topAreas': result
+    })
+  })
+});
 
 router.get("/:year/info", (req, res, next) => {
   params = {
