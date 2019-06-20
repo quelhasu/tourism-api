@@ -1,5 +1,4 @@
 var express = require('express');
-const apicache = require('apicache');
 var router = express.Router({ mergeParams: true });
 var writeResponse = require('../helpers/response').writeResponse
 var writeError = require('../helpers/response').writeError
@@ -7,6 +6,7 @@ const Updater = require('../helpers/update');
 var dbUtils = require('../neo4j/dbUtils');
 var Info = require("../models/info");
 var Destination = require("../models/destination");
+
 
 router.get("/", (req, res, next) => {
   res.send("hey");
