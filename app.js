@@ -45,7 +45,14 @@ app.use('/', indexRouter);
 app.use('/:city/stats', statsRouter);
 app.use('/:city/national', nationalRouter);
 app.use('/:city/international', internationalRouter);
-app.use('/:city/destination', destinationRouter);
+app.use('/:city/destination', destinationRouter); 
+
+// Clear all cache
+app.get('/api/cache/clear/:pass', (req, res) => {
+  if(req.params.pass === 'esilv2019') res.json(apicache.clear())
+  else res.send({'response': null})
+})
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
