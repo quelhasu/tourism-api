@@ -11,7 +11,9 @@ const internationalRouter = require('./routes/international');
 const destinationRouter = require('./routes/destination');
 
 var app = express();
+let cache = apicache.middleware;
 
+app.use(cache('5 minutes'))
 
 
 // view engine setup
