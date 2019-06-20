@@ -1,4 +1,5 @@
 var express = require('express');
+const apicache = require('apicache');
 var router = express.Router({ mergeParams: true });
 var writeResponse = require('../helpers/response').writeResponse
 var writeError = require('../helpers/response').writeError
@@ -7,12 +8,13 @@ var dbUtils = require('../neo4j/dbUtils');
 var Info = require("../models/info");
 var Destination = require("../models/destination");
 
+let cache = apicache.middleware;
 
 router.get("/", (req, res, next) => {
   res.send("hey");
 });
 
-router.get("/:year/:from/:groupby/annual", async (req, res, next) => {
+router.get("/:year/:from/:groupby/annual", cache('5 minutes'), async (req, res, next) => {
 
   if (Updater.verifyNames(req.params.from, req.params.groupby)) {
     let evolution = {};

@@ -8,6 +8,7 @@
     "docs": "jsdoc ./ --configure conf.json && mv ./docs/tourism-api/*/* ./docs"
   },
   "dependencies": {
+    "apicache": "^1.4.0",
     "apidoc": "^0.17.7",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
