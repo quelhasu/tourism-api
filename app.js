@@ -14,7 +14,7 @@ const destinationRouter = require('./routes/destination');
 var app = express();
 let cache = apicache.middleware;
 
-app.use(cache('5 minutes'))
+app.use(cache('2 days'))
 
 
 // view engine setup
@@ -48,7 +48,7 @@ app.use('/:city/international', internationalRouter);
 app.use('/:city/destination', destinationRouter); 
 
 // Clear all cache
-app.get('/api/cache/clear/:pass', (req, res) => {
+app.get('/cache/clear/:pass?', (req, res) => {
   if(req.params.pass === 'esilv2019') res.json(apicache.clear())
   else res.send({'response': null})
 })
