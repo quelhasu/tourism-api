@@ -1,442 +1,97 @@
-<img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/81/airplane_2708.png" align=right height=80>
+Tourism API
+=============
 
-# Tourism API
-> REST API to query Neo4J Tourism Database
+Micro-service of the Neo4Tourism framework which hierarchy implicitly manages the request parameters in order to define the required study (target Neo4j database), the granularity of the request (cities, departments, regions, countries) and the study parameters (population, traffic, evolution, centrality). It also makes it possible to manage database security and query consistency based on the corresponding studies.
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=2 orderedList=false} -->
+<p align="center">
+<img src="static/img/dashboard-panels.png" align="center" height=300>
+</p>
 
-<!-- code_chunk_output -->
+<p align="center">
+  <a href="https://bm.dvrc.fr/">Demo</a> | 
+  <a href="https://quelhasu.github.io/tourism-api/">Documentation</a> | 
+  <a href="https://github.com/quelhasu/tourism-admin">Tourism Admin Dashboard</a> |
+  <a href="https://github.com/quelhasu/tourism-dashboard">Tourism Dashboard</a>
+</p>
 
-- [Tourism API](#tourism-api)
-  - [Endpoints](#endpoints)
-    - [Database statistics](#database-statistics)
-    - [National context](#national-context)
-    - [International context](#international-context)
-    - [Destination context](#destination-context)
-- [Database statistics](#database-statistics-1)
-  - [Show number of users/reviews per year](#show-number-of-usersreviews-per-year)
-    - [Success Response Content Example](#success-response-content-example)
-  - [Show number of users/reviews per year and for given country](#show-number-of-usersreviews-per-year-and-for-given-country)
-    - [Success Response Content Example](#success-response-content-example-1)
-  - [Show number of users/reviews per year and for given country & dep](#show-number-of-usersreviews-per-year-and-for-given-country--dep)
-    - [Success Response Content Example](#success-response-content-example-2)
-- [National context](#national-context-1)
-  - [Ingoing/Outgoing evolution information per year](#ingoingoutgoing-evolution-information-per-year)
-    - [Success Response Content Example](#success-response-content-example-3)
-  - [Info available for national request](#info-available-for-national-request)
-    - [Success Response Content Example](#success-response-content-example-4)
-- [International context](#international-context-1)
-  - [Reviews evolution information per year](#reviews-evolution-information-per-year)
-    - [Success Response Content Example](#success-response-content-example-5)
-  - [Info available for international request](#info-available-for-international-request)
-    - [Success Response Content Example](#success-response-content-example-6)
-- [Destination context](#destination-context-1)
-  - [Ingoing/Outgoing evolution information per year](#ingoingoutgoing-evolution-information-per-year-1)
-    - [Success Response Content Example](#success-response-content-example-7)
-  - [Info available for destination request](#info-available-for-destination-request)
-    - [Success Response Content Example](#success-response-content-example-8)
-
-<!-- /code_chunk_output -->
-
-## Endpoints
-
-### Database statistics
-
-- [Show number of users/reviews per year](#show-number-of-usersreviews-per-year) : `GET /:city/stats/`
-- [... and for a given country](#show-number-of-usersreviews-per-year-and-for-given-country) : `GET /:city/stats/:country`
-- [... and for a given department](#show-number-of-usersreviews-per-year-and-for-given-country-dep) : `GET /:city/stats/:country/:dep`
-
-### National context
-
-- [Ingoing/Outgoing evolution information per year](#reviews-evolution-information-per-year) : `GET /:city/national/:year`
-- [Info available for national request](#info-available-for-national-request) : `GET /:city/national/:year/info`
-
-### International context
-
-- [Reviews evolution information per year](#number-of-reviews-per-country-for-a-given-year) : `GET /:city/international/:year`
-- [Info available for international request](#info-available-for-international-request) : `GET /:city/internnational/:year/info`
-
-### Destination context
-
-- [Ingoing/Outgoing evolution information per year](#ingoingoutgoing-evolution-information-per-year-1) : `GET /:city/destination/:year/:from/:groupby`
-- [Info available for grouping request](#info-available-for-destination-request) : `GET /:city/destination/:year/:from/:groupby/info`
-
-# Database statistics
-
-## Show number of users/reviews per year
-
-|                  |                 |
-| ---------------- | --------------- |
-| **URL**          | `/:city/stats/` |
-| **Method**       | **GET**         |
-| **Success Code** | 200             |
-
-### Success Response Content Example
-
-```json
-{
-  "2010": {
-    "year": 2010,
-    "users": "12 929",
-    "reviews": "42 687"
-  },
-  "2011": {
-    "year": 2011,
-    "users": "24 084",
-    "reviews": "112 358"
-  }
-  ...
-}
+Installation
+------------
+```bash
+$ git clone https://github.com/quelhasu/tourism-dashboard
 ```
 
-## Show number of users/reviews per year and for given country
+To connect to the Neo4j database, add the `.env` file in the root of the project with this configuration according your parameters:
+```js
+DATABASE_USERNAME="username"
+DATABASE_PASSWORD="password"
+```
+You can then choose to launch the service in two different ways:
 
-|                    |                                                    |
-| ------------------ | -------------------------------------------------- |
-| **URL**            | `/:city/stats/:country`                            |
-| **Method**         | **GET**                                            |
-| **Success Code**   | 200                                                |
-| **URL Parameters** | \* `country=[string]` : stats of specific country. |
-
-### Success Response Content Example
-
-```json
-{
-  "2010": {
-    "year": 2010,
-    "users": "12 929",
-    "reviews": "42 687",
-    "France": "6 283"
-  },
-  "2011": {
-    "year": 2011,
-    "users": "24 084",
-    "reviews": "112 358",
-    "France": "20 283"
-  }
-  ...
-}
+### Development
+The local configuration for the REST service is in the file `neo4j/dbUtils.js`, the driver must then launch the local configuration present in the file `config.js` in the root of the project like this: 
+```js
+nconf.get('neo4j-local').  
+```
+If the database is not available locally but externally, you can modify the `config.js` file to add your own link. Then you can run the service:
+```bash
+$ cd tourism-dashboard
+$ npm i
+$ npm run dev
 ```
 
-## Show number of users/reviews per year and for given country & dep
-
-|                    |                                                    |
-| ------------------ | -------------------------------------------------- |
-| **URL**            | `/:city/stats/:country/:dep`                       |
-| **Method**         | **GET**                                            |
-| **Success Code**   | 200                                                |
-| **URL Parameters** | \* `country=[string]` : stats of specific country. |
-|                    | \* `dep=[string]` : stats of specific department.  |
-
-### Success Response Content Example
-
-```json
-{
-  "2010": {
-    "year": 2010,
-    "users": "12 929",
-    "reviews": "42 687",
-    "France": "6 283"
-  },
-  "2011": {
-    "year": 2011,
-    "users": "24 084",
-    "reviews": "112 358",
-    "France": "20 283"
-  }
-  ...
-}
+### Docker
+Run the dockerfile independently or you can also include it in `docker-compose.yml` file.
+```bash
+$ cd tourism-dashboard
+$ docker build -t tourism-dashboard .
+...
+$ docker run -d -p 3000:3000 tourism-api
 ```
 
-# National context
-
-## Ingoing/Outgoing evolution information per year
-
-|                    |                                                                       |
-| ------------------ | --------------------------------------------------------------------- |
-| **URL**            | `/:city/national/:year`                                               |
-| **Method**         | **GET**                                                               |
-| **Success Code**   | 200                                                                   |
-| **URL Parameters** | \* `year=[number]` : evolution year.                                  |
-|                    | `countries=[array[string]]` : evolution for these user nationalities. |
-|                    | `departments=[array[string]]` : evolution for these departments.      |
-|                    | `ages=[array[string]]` : evolution for these user age ranges.         |
-|                    | `top=[number]` : top parameter for neo4j query.                       |
-
-### Success Response Content Example
-
-```json
-{ 
-  "Centrality":{
-    "Gironde": {
-      "2017": {
-          "value": 2.08
-      },
-      "2018": {
-          "value": 2.09
-      },
-      "diff": {
-          "value": 0.01
-      }
-    },
-    ...
-  },
-  "TotalReviews":{
-    "2017": {
-      "NB1": 63948,
-      "NB2": 62352,
-      "Year": 2017
-    },
-    "2018": {
-      "NB1": 47626,
-      "NB2": 47958,
-      "Year": 2018
-    },
-    "diff": ...
-      ...
-  },
-  "Evolution": {
-    "Gironde": {
-      "2017": {
-          "Ingoing": 9.41,
-          "Outgoing": 10.42
-      },
-      "2018": {
-          "Ingoing": 10.52,
-          "Outgoing": 9.82
-      },
-      "diff": {
-          "Ingoing": 1.11,
-          "Outgoing": -0.6
-      }
-    },
-    ...
-  },
-  {
-    "Monthly": {
-      "Gironde": {
-        "Ingoing": {
-          "months": [
-            {
-              "low": 156,
-              "high": 0
-            },
-          ]
-        },
-        "Outgoing":...
-      },
-    }
-  }
-}
+If you want to use it in docker-compose file, same as above but with `neo4j-docker` variable to access the neo4j container. Here is an example of `docker-compose.yml` including the neo4j database and the rest service:
+```yml
+version: "3"
+services:
+  api:
+    container_name: api
+    build:
+      context: ./tourism-api
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    links:
+      - neo4j
+    depends_on:
+      - neo4j
+    environment:
+      WAIT_HOSTS: neo4j:7474
+      WAIT_HOSTS_TIMEOUT: 60
+  neo4j:
+    container_name: database
+    image: neo4j:latest
+    ports:
+      - "7473:7473"
+      - "7474:7474"
+      - "7687:7687"
+    expose:
+      - "7473"
+      - "7474"
+      - "7687"
+    environment:
+      - NEO4J_dbms_security_procedures_unrestricted=algo.*,apoc.*
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_dbms_shell_enabled=true
+      - NEO4J_dbms_memory_heap_max__size=8G 
+      - NEO4J_dbms_memory_heap_initial__size=8G
+    volumes:
+      - $HOME/neo4tourism/tourism-neo4j/plugins:/plugins
+      - $HOME/neo4tourism/tourism-neo4j/data:/data
+      - $HOME/neo4tourism/tourism-neo4j/import:/import
 ```
 
-## Info available for national request
-
-|                    |                                      |
-| ------------------ | ------------------------------------ |
-| **URL**            | `/:city/national/:year/info`         |
-| **Method**         | **GET**                              |
-| **Success Code**   | 200                                  |
-| **URL Parameters** | \* `year=[number]` : evolution year. |
-
-### Success Response Content Example
-
-```json
-{
-  "topRegions": ["Centre", "Bretagne", "Limousin",...],
-  "topCountries": ["France", "-", "Belgium",...],
-  "topAges": ["13-17", "", "18-25",...]
-}
-```
-
-# International context
-
-## Reviews evolution information per year
-
-|                    |                                                                      |
-| ------------------ | -------------------------------------------------------------------- |
-| **URL**            | `/:city/international/:year`                                         |
-| **Method**         | **GET**                                                              |
-| **Success Code**   | 200                                                                  |
-| **URL Parameters** | \* `year=[number]` : evolution year.                                 |
-|                    | `countries=[array[string]]` :evolution for these user nationalities. |
-|                    | `areas=[array[string]]` : evolution for these areas.                 |
-|                    | `ages=[array[string]]` : evolution for these user age ranges.        |
-|                    | `top=[number]` : top parameter for neo4j query.                      |
-
-### Success Response Content Example
-
-```json
-{
-  "TotalReviews":{
-    "2012": {
-      "NB1": 22597,
-      "Year": 2012
-    },
-    "2013": {
-      "NB1": 48273,
-      "Year": 2013
-    },
-    "diff": {
-      "NB1": 113.63
-    }
-  },
-  "Evolution": {
-    "France": {
-      "2015": 57.84,
-      "2016": 55.78,
-      "diff": -2.06
-    },
-    "-": {
-      "2015": 31.21,
-      "2016": 34.07,
-      "diff": 2.86
-    },
-  },
-  "Monthly": {
-    "France": {
-      "Reviews": {
-        "months": [
-          {
-            "low": 5840,
-            "high": 0
-          },
-          ..
-        ]
-      }
-    }
-  }
-}
-```
-
-## Info available for international request
-
-|                    |                                      |
-| ------------------ | ------------------------------------ |
-| **URL**            | `/:city/international/:year/info`    |
-| **Method**         | **GET**                              |
-| **Success Code**   | 200                                  |
-| **URL Parameters** | \* `year=[number]` : evolution year. |
-
-### Success Response Content Example
-
-```json
-{
-  "topCountries": ["France", "-", "Belgium",...],
-  "topAges": ["13-17", "", "18-25",...]
-}
-```
-
-# Destination context
-
-## Ingoing/Outgoing evolution information per year
-
-|                    |                                                                        |
-| ------------------ | ---------------------------------------------------------------------- |
-| **URL**            | `/:city/destination/:year/:from/:groupby`                              |
-| **Method**         | **GET**                                                                |
-| **Success Code**   | 200                                                                    |
-| **URL Parameters** | \* `year=[number]` : evolution year.                                   |
-|                    | \* `from=[number]` : perimeter for neo4j query.                        |
-|                    | \* `groupby=[number]` : for this perimeter, groupby regions, dep, etc. |
-|                    | `countries=[array[string]]` : evolution for these user nationalities.  |
-|                    | `areas=[array[string]]` : evolution for these areas.                   |
-|                    | `ages=[array[string]]` : evolution for these user age ranges.          |
-|                    | `top=[number]` : top parameter for neo4j limit aggregate.              |
-
-### Success Response Content Example
-
-```json
-{
-  "Centrality":{
-    "Bordeaux": {
-      "2016": {
-        "value": 2.43
-      },
-      "2017": {
-        "value": 2.54
-      },
-      "2018": {
-        "value": 2.51
-      },
-      "diff": {
-        "value": -0.03
-      }
-  },
-    ...
-  },
-  "TotalReviews":{
-    "2016": {
-      "NB1": 4906,
-      "Year": 2016
-    },
-    "2017": {
-      "NB1": 3960,
-      "Year": 2017
-    },
-    "2018": {
-      "NB1": 3031,
-      "Year": 2018
-    },
-    "diff": {
-      "NB1": -23.46
-    }
-  },
-  "Evolution": {
-    "Bordeaux": {
-      "2016": {
-        "Ingoing": 17.24,
-        "Outgoing": 17.47
-      },
-      "2017": {
-        "Ingoing": 13.38,
-        "Outgoing": 24.42
-      },
-      "2018": {
-        "Ingoing": 10.89,
-        "Outgoing": 25.4
-      },
-      "diff": {
-        "Ingoing": -2.49,
-        "Outgoing": 0.98
-      }
-    },
-    ...
-  },
-  {
-    "Monthly": {
-     "Bordeaux": {
-        "Ingoing": {
-          "months": [
-            {
-              "low": 93,
-              "high": 0
-            },
-          ]
-        },
-        "Outgoing":...
-     }
-  }
-}
-```
-
-## Info available for destination request
-
-|                    |                                                                        |
-| ------------------ | ---------------------------------------------------------------------- |
-| **URL**            | `/:city/destination/:year/:from/:groupby/info`                         |
-| **Method**         | **GET**                                                                |
-| **Success Code**   | 200                                                                    |
-| **URL Parameters** | \* `year=[number]` : evolution year.                                   |
-|                    | \* `from=[number]` : perimeter for neo4j query.                        |
-|                    | \* `groupby=[number]` : for this perimeter, groupby regions, dep, etc. |
-
-### Success Response Content Example
-
-```json
-{
-  "topCountries": ["France", "-", "Belgium",...],
-  "topAreas": ["Bordeaux",...],
-  "topAges": ["13-17", "", "18-25",...]
-}
-```
+Add new routes
+--------------
+All routes are available in the `routes` folder. It's possible to add as many routes as desired, it's then necessary to modify the `app.js` file in order to make them accessible.  
+The architecture implies that interactions with the database are performed in the files of the `models` folder.

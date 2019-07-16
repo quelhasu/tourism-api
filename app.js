@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const apicache = require('apicache');
 
+// Route import
 const indexRouter = require('./routes/index');
 const statsRouter = require('./routes/stats');
 const nationalRouter = require('./routes/national');
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Accessible routes
 statsRouter,internationalRouter,nationalRouter,destinationRouter.get('/', (req, res, next) => {
   res.send(req.params);
 })
@@ -41,6 +43,7 @@ app.use(function(req, res, next) {
   next();
 });
 
+// Map routes
 app.use('/', indexRouter);
 app.use('/:city/stats', statsRouter);
 app.use('/:city/national', nationalRouter);
