@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const apicache = require('apicache');
+require('dotenv').config()
 
 // Route import
 const indexRouter = require('./routes/index');
@@ -29,8 +30,18 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Accessible routes
-statsRouter,internationalRouter,nationalRouter,destinationRouter.get('/', (req, res, next) => {
-  res.send(req.params);
+// statsRouter,internationalRouter,nationalRouter,destinationRouter.get('/:city', (req, res, next) => {
+//   console.log('hello');
+//   console.log(req.params.city)
+//   res.send(req.params);
+// })
+
+app.use('/:city', function(req, res, next){
+  process.env.DATABASE = req.params.city;
+  var json = require('./config/config.json');
+  console.log("A new request received at " + Date.now());
+  if(req.params.city in json) next();
+  else res.status(404).send(`Database '${req.params.city}' does not exist!`);
 })
 
 // CORS, whom are allow to use the API

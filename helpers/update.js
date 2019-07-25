@@ -1,3 +1,6 @@
+var nconf = require('nconf');
+require('dotenv').config()
+
 exports.yearArray = (year, to) => {
   let yearArr = [];
   while (year >= to && year >= 2013) {
@@ -167,19 +170,20 @@ String.prototype.nameQuery = function () {
  * @return {String} formated string 
  */
 String.prototype.nameQueryFrom = function () {
+  const DB = nconf.get(process.env.DATABASE)
   let destination = null;
   switch (Number(this)) {
     case 0:
-      destination = 'France';
+      destination = DB.name_0;
       break;
     case 1:
-      destination = 'Nouvelle-Aquitaine';
+      destination = DB.name_1;
       break;
     case 2:
-      destination = 'Gironde';
+      destination = DB.name_2;
       break;
     case 3:
-      destination = 'Bordeaux';
+      destination = DB.name_3;
       break;
     default:
       break;

@@ -24,15 +24,13 @@ nconf.env(['PORT', 'NODE_ENV'])
       demand: false,
       default: "local"
     }
-  })
+  })  
+  .file('config/config.json')
   .defaults({
     'USERNAME': process.env.DATABASE_USERNAME,
     'PASSWORD' : process.env.DATABASE_PASSWORD,
-    'neo4j': 'local',
-    'neo4j-local': 'bolt://localhost',
-    'neo4j-docker': 'bolt://neo4j',
-    'base_url': 'http://localhost:3000',
-    'api_path': '/api/v0'
   });
+
+  
 
 module.exports = nconf;

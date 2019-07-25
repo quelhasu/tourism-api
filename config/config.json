@@ -1,0 +1,20 @@
+{
+  "neo4j": "local",
+  "neo4j-docker": "bolt://neo4j",
+  "base_url": "http://localhost:3000",
+  "api_path": "/api/v0",
+  "BM": {
+    "bolt": "bolt://localhost",
+    "name_0": "France",
+    "name_1": "Nouvelle-Aquitaine",
+    "name_2": "Gironde",
+    "name_3": "Bordeaux"
+  },
+  "lyon": {
+    "bolt": "bolt://localhost",
+    "name_0": "France",
+    "name_1": "Auvergne-Rhône-Alpes",
+    "name_2": "Rhône",
+    "name_3": "Lyon"
+  }
+}
