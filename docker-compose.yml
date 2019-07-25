@@ -1,0 +1,16 @@
+version: "2"
+services:
+  api:
+    container_name: api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8000:3000"
+    networks:
+      neo4tourism:
+        ipv4_address: 172.23.0.3
+networks:
+  neo4tourism:
+    external:
+      name: stage_neo4tourism
