@@ -3,7 +3,7 @@
 Micro-service of the Neo4Tourism framework which hierarchy implicitly manages the request parameters in order to define the required study (target Neo4j database), the granularity of the request (cities, departments, regions, countries) and the study parameters (population, traffic, evolution, centrality). It also makes it possible to manage database security and query consistency based on the corresponding studies.
 
 <p align="center">
-<img src="static/img/dashboard-panels.png" align="center" height=300>
+<img src="static/img/dashboard-panels-next.png" align="center" height=300>
 </p>
 
 <p align="center">
