@@ -6,7 +6,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     ports:
-      - "8000:3000"
+      - "3000:3000"
     networks:
       neo4tourism:
         ipv4_address: 172.23.0.3
