@@ -4,7 +4,7 @@
   "base_url": "http://localhost:3000",
   "api_path": "/api/v0",
   "BM": {
-    "bolt": "bolt://localhost",
+    "bolt": "bolt://172.23.0.2",
     "name_0": "France",
     "name_1": "Nouvelle-Aquitaine",
     "name_2": "Gironde",

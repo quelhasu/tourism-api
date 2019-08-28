@@ -72,11 +72,11 @@ To add a new context, modify the `config/config.json` file by adding the name of
 ```json
 {
   "marseille": {
-    // city name called in the API URL
-    "bolt": "bolt://", // bolt url of the Neo4j database
-    "name_0": "France", // country
-    "name_1": "Provence-Alpes-Côte d’Azur", // region
-    "name_2": "Bouches-du-Rhône", // department
+    "_comment":"bolt: url of the neo4j db",
+    "bolt": "bolt://", 
+    "name_0": "France",
+    "name_1": "Provence-Alpes-Côte d’Azur",
+    "name_2": "Bouches-du-Rhône",
     "name_3": "Marseille"
   }
 }
