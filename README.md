@@ -22,82 +22,43 @@ $ git clone https://github.com/quelhasu/tourism-dashboard
 To connect to the Neo4j database, add the `.env` file in the root of the project with this configuration according your parameters:
 
 ```js
-DATABASE_USERNAME = "username";
-DATABASE_PASSWORD = "password";
+DATABASE_USERNAME = "username"
+DATABASE_PASSWORD = "password"
 ```
 
 You can then choose to launch the service in two different ways:
 
 ### Development
 
-The local configuration for the REST service is in the file `neo4j/dbUtils.js`, the driver must then launch the local configuration present in the file `config.js` in the root of the project like this:
-
-```js
-nconf.get('neo4j-local').
+The local configuration for the REST service is in the file `neo4j/dbUtils.js`.
+You can modify the `config/config.json` file to add your own link. 
+```json
+{
+  "BM":{
+    "bolt": "bolt://172.23.0.2"
+  }
+}
 ```
-
-If the database is not available locally but externally, you can modify the `config.js` file to add your own link. Then you can run the service:
+Then you can run the service:
 
 ```bash
-$ cd tourism-dashboard
+$ cd tourism-api
 $ npm i
 $ npm run dev
 ```
 
 ### Docker
 
-Run the dockerfile independently or you can also include it in `docker-compose.yml` file.
+If you want to run it with Docker, make sure you have already instantiated the Neo4j database container, you can find an explanation [here](README_db.md).
 
+It will then be necessary to modify the configuration file to access the correct database according to the IP address it has allocated.
+
+You can then launch the container from the docker-compos command which will allocate an IP address for the API in the network previously created in Docker.
 ```bash
-$ cd tourism-dashboard
-$ docker build -t tourism-dashboard .
-...
-$ docker run -d -p 3000:3000 tourism-api
+$ docker-compose build
+$ docker-compose up
 ```
-
-If you want to use it in docker-compose file, same as above but with `neo4j-docker` variable to access the neo4j container. Here is an example of `docker-compose.yml` including the neo4j database and the rest service:
-
-```yml
-version: "3"
-services:
-  api:
-    container_name: api
-    build:
-      context: ./tourism-api
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    links:
-      - neo4j
-    depends_on:
-      - neo4j
-    environment:
-      WAIT_HOSTS: neo4j:7474
-      WAIT_HOSTS_TIMEOUT: 60
-  neo4j:
-    container_name: database
-    image: neo4j:latest
-    ports:
-      - "7473:7473"
-      - "7474:7474"
-      - "7687:7687"
-    expose:
-      - "7473"
-      - "7474"
-      - "7687"
-    environment:
-      - NEO4J_dbms_security_procedures_unrestricted=algo.*,apoc.*
-      - NEO4J_apoc_export_file_enabled=true
-      - NEO4J_apoc_import_file_use__neo4j__config=true
-      - NEO4J_apoc_import_file_enabled=true
-      - NEO4J_dbms_shell_enabled=true
-      - NEO4J_dbms_memory_heap_max__size=8G
-      - NEO4J_dbms_memory_heap_initial__size=8G
-    volumes:
-      - $HOME/neo4tourism/tourism-neo4j/plugins:/plugins
-      - $HOME/neo4tourism/tourism-neo4j/data:/data
-      - $HOME/neo4tourism/tourism-neo4j/import:/import
-```
+Then your API is accessible on port 3000 according the yaml file.
 
 ## Add new routes
 
@@ -106,11 +67,11 @@ The architecture implies that interactions with the database are performed in th
 
 ## Add new context
 
-To add a new context, modify the `config/config.json` file by adding the name of the city being studied. For example, if you have a database based on the city of _Paris_ with an API call that may look like `https://api.com/paris/destination`, add the following object:
+To add a new context, modify the `config/config.json` file by adding the name of the city being studied. For example, if you have a database based on the city of __Marseille__ with an API call that may look like `https://api.com/marseille/destination`, add the following object:
 
 ```json
 {
-  "paris": {
+  "marseille": {
     // city name called in the API URL
     "bolt": "bolt://", // bolt url of the Neo4j database
     "name_0": "France", // country
